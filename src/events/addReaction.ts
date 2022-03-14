@@ -10,7 +10,7 @@ export const event = {
   execute: async (reaction: MessageReaction, user: User | PartialUser) => {
     if(user.bot) return;
 
-    if(reaction.emoji.name) return;
+    if(!reaction.emoji.name) return;
 
     const nameSelected = reaction.message?.embeds[0]?.title?.toLowerCase()
     if(!nameSelected) return;
