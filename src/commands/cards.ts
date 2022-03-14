@@ -54,9 +54,10 @@ export const command: ICommands = {
         )
 
       return message.channel.send(embed);
-    } else {
-      const card = myCards[cardID - 1]
-      
+    } 
+    const card = myCards[cardID - 1]
+
+    if(card) {
       EmbedCard(message, {
         title: capitalizeStr(card.name),
         description: `Anime: **${capitalizeStr(card.anime)}**\n` + 
@@ -65,6 +66,9 @@ export const command: ICommands = {
       }).then(msg => {
         msg.react('<:ByteCoins:950614195290898464>')
       })
+    } else {
+      message.channel.send('Não consegui achar a sua carta com o ID informado.')
+        .then(msg => msg.delete({ timeout: 8000 }));
     }
   }
 }

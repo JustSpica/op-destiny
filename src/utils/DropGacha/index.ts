@@ -6,7 +6,7 @@ export const dropGacha = (value: number) => {
 
     if(randomNumber <= 0.5) {
       rank.push(5);
-    } else if(randomNumber <= 7) {
+    } else if(randomNumber <= 4.5) {
       rank.push(4);
     } else if(randomNumber <= 25.75) {
       rank.push(3);
