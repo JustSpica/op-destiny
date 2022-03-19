@@ -52,7 +52,7 @@ export const command: ICommands = {
           format: "png", 
           size: 1024 
         })))
-        .setDescription('Utilize `op!cards <id(s)>` para vender uma marca pelo meu valor.'+ 
+        .setDescription('Utilize `op!cards <id(s)>` para vender uma carta pelo meu valor.'+ 
           cardsArr.map(item => (
             `\n\n#${item.idCard}⠆ ${capitalizeStr(item.name)}: **${item.amount}** xp points  <:ByteCoins:950614195290898464>`
           ))
