@@ -43,6 +43,23 @@ export const command: ICommands = {
         cardsArr.push(cardSelected!);
       }
 
+      if(cardsArr.length === 0) {
+        embed
+          .setColor('#F4F5FA')
+          .setAuthor('Op. Destiny', 'https://i.imgur.com/7A5FaAn.jpg')
+          .setThumbnail(String(message.author.avatarURL({ 
+            dynamic: true, 
+            format: "png", 
+            size: 1024 
+          })))
+          .setDescription(
+            `Opa ${message.author}, você não possui nenhuma carta no seu inventário. ` + 
+            `Experimente girar algum pacote para conseguir mais cartas. 🙂`
+          )
+
+        return message.channel.send(embed);
+      }
+
       embed
         .setColor('#F4F5FA')
         .setTitle(`Essas são suas cartas ${message.author.username} 😊`)
