@@ -19,8 +19,6 @@ export const event = {
       name: nameSelected.slice(7),
     })
 
-    console.log(cardSelected)
-
     if(!cardSelected) return;
 
     let userActive = await UsersDropModel.findOne({

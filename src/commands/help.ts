@@ -36,8 +36,6 @@ export const command: ICommands = {
 
     const targetCommand = commands.find(cmd => cmd.name === command);
 
-    console.log(targetCommand);
-
     if(targetCommand) {
       embed
         .setColor('#F4F5FA')

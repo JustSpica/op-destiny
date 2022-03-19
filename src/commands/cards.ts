@@ -61,8 +61,6 @@ export const command: ICommands = {
       return message.channel.send(embed);
     }
 
-    console.log(args)
-
     const cards = args.map(idCard => {
       const newId = userActive?.cards.find(item => item === idCard);
      
