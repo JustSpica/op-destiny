@@ -6,7 +6,7 @@ import { ICommands } from "../types";
 
 export const command: ICommands = {
   name: 'rank',
-  description: "Mostra o rank atual do servidor",
+  description: "Mostra o TOP 5 usuários do rank do servidor",
   aliases: ['levels', 'usersRank', 'ranque'],
   execute(message, args) {
     if(message.channel.type === 'dm') return;

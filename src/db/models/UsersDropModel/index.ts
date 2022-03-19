@@ -1,13 +1,13 @@
-import { model, Schema, Types } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
-type UserGachaType = {
+export type UsersDropModelType = {
   userName: string;
   userId: string;
-  cards: Types.ObjectId[];
+  cards: string[];
   timestamp: number;
 }
 
-export const UserGachaModel = model('userGacha', new Schema<UserGachaType>({
+export const UsersDropModel = model('drops', new Schema<UsersDropModelType>({
   userName: {
     type: String,
     required: true,
@@ -19,13 +19,13 @@ export const UserGachaModel = model('userGacha', new Schema<UserGachaType>({
     unique: false
   },
   cards: {
-    type: [Types.ObjectId],
+    type: [String],
     required: true,
-    unique: false
+    unique: false,
   },
   timestamp: {
     type: Number,
     required: false,
     unique: false
-  },
+  }
 }))

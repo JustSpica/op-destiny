@@ -28,7 +28,7 @@ export const event = {
     }
 
     try {
-			targetCommand.execute(message, args, client)
+			targetCommand.execute(message, args, client, commands)
 		} catch (error) {
 			console.error(error);
 			message.reply('Houve um erro ao tentar executar esse comando.');

@@ -1,25 +1,27 @@
 import { Message, MessageEmbed } from 'discord.js';
 
-type EmbedCardProps = {
+export type EmbedProps = {
+  color: string;
   title: string;
   description: string;
-  imageUrl: string;
+  thumb?: string;
 }
 
-export const EmbedCard = (
+export const GeneralEmbed = (
   message: Message, 
   { 
-    title, 
+    color, 
     description, 
-    imageUrl 
-  }: EmbedCardProps) => {
+    thumb, 
+    title 
+  }: EmbedProps) => {
   const embed = new MessageEmbed();
 
   embed
-    .setColor('#F4F5FA')
+    .setColor(color)
+    .setAuthor('Op. Destiny', 'https://i.imgur.com/7A5FaAn.jpg')
     .setTitle(title)
     .setDescription(description)
-    .setImage(imageUrl)
-  
+
   return message.channel.send(embed)
 }

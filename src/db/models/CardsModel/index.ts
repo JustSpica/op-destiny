@@ -1,15 +1,20 @@
-import { model, Schema, Types } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
-export type GachaObjectType = {
-  _id: Types.ObjectId;
+export type CardsModelType = {
+  idCard: string;
   name: string;
   anime: string;
   amount: number;
-  rank: number;
-  link: string;
+  tier: number;
+  linkURL: string;
 }
 
-export const CardModel = model('card', new Schema<GachaObjectType>({
+export const CardsModel = model('cards', new Schema<CardsModelType>({
+  idCard: {
+    type: String,
+    required: true,
+    unique: true
+  },
   name: {
     type: String,
     required: true,
@@ -18,21 +23,21 @@ export const CardModel = model('card', new Schema<GachaObjectType>({
   anime: {
     type: String,
     required: true,
-    unique: false,
+    unique: false
   },
   amount: {
     type: Number,
     required: true,
     unique: false
   },
-  rank: {
+  tier: {
     type: Number,
     required: true,
     unique: false
   },
-  link: {
+  linkURL: {
     type: String,
     required: true,
-    unique: true
-  }
+    unique: false
+  },
 }))

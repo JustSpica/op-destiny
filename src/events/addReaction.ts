@@ -1,8 +1,8 @@
-import { MessageReaction, User, PartialUser } from 'discord.js';
+import { MessageReaction, User, PartialUser, Message } from 'discord.js';
 
-import { CardModel } from '../db/models/CardModel'
+import { CardsModel } from '../db/models/CardsModel'
 import { LevelModel } from '../db/models/LevelModel';
-import { UserGachaModel } from '../db/models/UserGachaModel';
+import { UsersDropModel } from '../db/models/UsersDropModel';
 
 export const event = {
   name: 'messageReactionAdd',
@@ -10,27 +10,37 @@ export const event = {
   execute: async (reaction: MessageReaction, user: User | PartialUser) => {
     if(user.bot) return;
 
-    if(!reaction.emoji.name) return;
+    if(reaction.emoji.name !== 'ByteCoins') return;
 
     const nameSelected = reaction.message?.embeds[0]?.title?.toLowerCase()
     if(!nameSelected) return;
 
-    const cardSelected = await CardModel.findOne({
-      name: nameSelected
+    const cardSelected = await CardsModel.findOne({
+      name: nameSelected.slice(7),
     })
+
+    console.log(cardSelected)
+
     if(!cardSelected) return;
 
-    let userActive = await UserGachaModel.findOne({
-      userId: user.id,
+    let userActive = await UsersDropModel.findOne({
+      userId: user.id
     })
-    if(!userActive) return
+
+    if(!userActive) {
+      return reaction.message.channel.send(
+        `${user}, você ainda não girou nenhum pacote de cartas, então não tenho você no sistema.\n` + 
+        `De uma olhada nas opções disponíveis com o comando **op!dropList**. 😊`
+      ).then(msg => msg.delete({ timeout: 10000 }));
+    }
 
     const cardId = userActive.cards.find(item => 
-      item.toString() === cardSelected._id.toString()
+      item === cardSelected.idCard
     )
-    if(!cardId) return
 
-    await UserGachaModel.bulkWrite(
+    if(!cardId) return;
+
+    await UsersDropModel.bulkWrite(
       [
         { updateOne: {
           filter: { cards: cardId },
@@ -52,14 +62,8 @@ export const event = {
     })
 
     await LevelModel.findOneAndUpdate(
-      {
-        userId: user.id
-      },
-      {
-        $set: {
-          xp: xp + cardSelected.amount
-        }
-      }
+      { userId: user.id },
+      { $set: { xp: xp + cardSelected.amount } }
     )
   }
 }

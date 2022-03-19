@@ -1,7 +1,7 @@
 import { Client, Message, TextChannel, RoleResolvable } from 'discord.js';
 
 import { LevelModel } from '../../db/models/LevelModel'
-import { LevelUpEmbed } from '../../components/EmbedLevelUp'
+/* import { LevelUpEmbed } from '../../components/EmbedLevelUp' */
 
 import mock from './mock';
 
@@ -46,9 +46,9 @@ export const LevelSystem = async (message: Message, client: Client) => {
       });
       message.member?.roles.add(newRole as RoleResolvable);
 
-      const { embed } = LevelUpEmbed(message.author, level, xp);
+      /* const { embed } = LevelUpEmbed(message.author, level, xp);
 
-      channelLevelUp.send(embed);
+      channelLevelUp.send(embed); */
     };
 
     rank = await LevelModel.findOneAndUpdate(

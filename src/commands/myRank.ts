@@ -8,7 +8,7 @@ import { ICommands } from "../types";
 
 export const command: ICommands = {
   name: 'myRank',
-  description: "Mostra seu rank no servidor",
+  description: "Usado para mostrar seu rank no servidor. (Pode ser usado na dm)",
   aliases: ['myLevel', 'userRank', 'meuRanque'],
   execute: async (message, args) => {
     const embed = new MessageEmbed();

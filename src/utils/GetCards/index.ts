@@ -1,16 +1,18 @@
-import { CardModel, GachaObjectType } from '../../db/models/CardModel';
+import { CardsModel, CardsModelType } from "../../db/models/CardsModel";
 
-export const getCards = async (rank: number[]) => {
-  const arr: GachaObjectType[] = [];
+import { randomNumbers } from '../../functions/randomNumbers';
+
+export const getCards = async (tiers: number[]) => {
+  const arr: CardsModelType[] = [];
   
-  for (let index = 0; index < rank.length; index++) {
-    const card = await CardModel.find({
-      rank: rank[index]
+  for (let index = 0; index < tiers.length; index++) {
+    const card = await CardsModel.find({
+      tier: tiers[index]
     })
-    const randomIndex = Math.floor((Math.random() * (card.length)));
+    const randomIndex = randomNumbers(0, (card.length - 1));
 
-    arr.push(card[randomIndex])
+    arr.push(card[randomIndex]);
   }
 
-  return arr
+  return arr;
 }
