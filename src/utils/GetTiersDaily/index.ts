@@ -7,9 +7,9 @@ export const getTiersDaily = (cards: number) => {
 
     console.log(randomNumber);
 
-    if(randomNumber < 0.3) {
+    if(randomNumber < 0.1) {
       arr.push(6)
-    } else if(randomNumber < 1) {
+    } else if(randomNumber < 0.3) {
       arr.push(5)
     } else if(randomNumber < 6) {
       arr.push(4)

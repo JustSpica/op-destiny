@@ -7,7 +7,7 @@ export const getTiers = (cards: number) => {
 
     if(randomNumber < 0.010) {
       arr.push(6)
-    } else if(randomNumber < 0.2) {
+    } else if(randomNumber < 0.1) {
       arr.push(5)
     } else if(randomNumber < 3) {
       arr.push(4)
