@@ -1,7 +1,6 @@
-import { Client, Message, TextChannel, RoleResolvable } from 'discord.js';
+import { Client, Message, TextChannel, RoleResolvable, MessageEmbed } from 'discord.js';
 
 import { LevelModel } from '../../db/models/LevelModel'
-/* import { LevelUpEmbed } from '../../components/EmbedLevelUp' */
 
 import mock from './mock';
 
@@ -39,6 +38,8 @@ export const LevelSystem = async (message: Message, client: Client) => {
     console.log(`xp: ${xp} xpNivel: ${xpNextLevel}`)
 
     if(xp >= xpNextLevel && level !== 5) {
+      const embed = new MessageEmbed();
+
       level++;
 
       const newRole = guild?.roles.cache.find(item => {
@@ -46,9 +47,15 @@ export const LevelSystem = async (message: Message, client: Client) => {
       });
       message.member?.roles.add(newRole as RoleResolvable);
 
-      /* const { embed } = LevelUpEmbed(message.author, level, xp);
-
-      channelLevelUp.send(embed); */
+      embed
+        .setColor('#F4F5FA')
+        .setAuthor('Op. Destiny', 'https://i.imgur.com/7A5FaAn.jpg')
+        .setTitle(`🎉 Level Up de ${message.author} 🎉`)
+        .setDescription(
+          `Parabéns ${message.author}, você acabou de upar no servidor para o **Level${level}**\n`+
+          `Seu xp points atual é de: ${xp} xp points`)
+      
+      channelLevelUp.send(embed);
     };
 
     rank = await LevelModel.findOneAndUpdate(
