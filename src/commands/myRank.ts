@@ -15,8 +15,8 @@ export const command: ICommands = {
 
     const users: LevelModelType[] = await LevelModel.find({}).sort({xp: -1})
 
-    const user = users.find(item => item.userName === message.author.username);
-    const index = users.findIndex(item => item.userName === message.author.username);
+    const user = users.find(item => item.userId === message.author.id);
+    const index = users.findIndex(item => item.userId === message.author.id);
 
     if(!user) {
       return message.channel.send('Ops! Não consegui achar você no rank do servidor. ' + 
