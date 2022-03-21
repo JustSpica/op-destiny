@@ -99,7 +99,7 @@ export const command: ICommands = {
         color: '#F4F5FA', 
         title: `#${item?.idCard} - ${capitalizeStr(String(item?.name))}`,
         description: 
-          `Anime: **${capitalizeStr(String(item?.name))}**\n` + 
+          `Anime: **${capitalizeStr(String(item?.anime))}**\n` + 
           `Valor de venda: **${item?.amount}** xp points  <:ByteCoins:950614195290898464>`,
         linkURL: String(item?.linkURL)
       }).then(msg => msg.react('<:ByteCoins:950614195290898464>'))
