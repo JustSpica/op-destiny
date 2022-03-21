@@ -17,7 +17,7 @@ export const command: ICommands = {
         DropSystem(message, { amount: 750, cardsNumber: 5 });
         break;
       case '2': 
-        DropSystem(message, { amount: 1150, cardsNumber: 8 });
+        DropSystem(message, { amount: 1450, cardsNumber: 8 });
         break;
       case 'd':
       case 'daily':

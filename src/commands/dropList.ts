@@ -16,7 +16,7 @@ export const command: ICommands = {
         '📦 **#1 pacote⠆ Contêm um total de 5 drop de cartas**\n' +
         'Preço de compra: **750xp points**\n\n' + 
         '📦 **#2 pacote⠆ Contêm um total de 8 drop de cartas**\n' + 
-        'Preço de compra: **1150xp points**\n\n' + 
+        'Preço de compra: **1450xp points**\n\n' + 
         '✨ **Pacote daily⠆ Pacote de 3 cartas que pode ser aberto todo dia**\n' +
         '**Gratuito** (Chances maiores de high drop)'
     })
