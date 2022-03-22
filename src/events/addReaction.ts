@@ -36,7 +36,11 @@ export const event = {
       item === cardSelected.idCard
     )
 
-    if(!cardId) return;
+    if(!cardId) {
+      return reaction.message.channel.send(
+        `${user}, você não pode vender cartas que você não possui né. 🙄`
+      ).then(msg => msg.delete({ timeout: 8000 }));
+    };
 
     await UsersDropModel.bulkWrite(
       [
