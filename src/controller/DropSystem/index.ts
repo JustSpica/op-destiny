@@ -8,14 +8,16 @@ import { UsersDropModel } from "../../db/models/UsersDropModel";
 import { capitalizeStr } from "../../functions/capitalize";
 
 import { getCards } from "../../utils/GetCards";
+import { getHighBonus } from "../../utils/GetHighBonus";
 import { getTiers } from "../../utils/GetTiers";
 
 type DropSystemProps = {
   amount: number;
   cardsNumber: number;
+  limitedTime?: boolean;
 }
 
-export const DropSystem = async (message: Message, { amount, cardsNumber }: DropSystemProps) => {
+export const DropSystem = async (message: Message, { amount, cardsNumber, limitedTime }: DropSystemProps) => {
   const user: LevelModelType | null = await LevelModel.findOne({
     userId: message.author.id,
   });
@@ -42,7 +44,15 @@ export const DropSystem = async (message: Message, { amount, cardsNumber }: Drop
     })  
   }
 
-  const tiers = getTiers(cardsNumber);
+  let tiers: number[] = [];
+
+  if(limitedTime) {
+    tiers = getHighBonus(cardsNumber)
+  } else {
+    tiers = getTiers(cardsNumber)
+  }
+
+
   const cards = await getCards(tiers);
   const cardsId = cards.map(item => item.idCard)
 

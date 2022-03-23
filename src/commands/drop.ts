@@ -23,6 +23,10 @@ export const command: ICommands = {
       case 'daily':
         DropSystemDaily(message, 3)
         break;
+      case 'b':
+      case 'bonus':
+        DropSystem(message, { amount: 2150, cardsNumber: 1, limitedTime: true });
+        break;
       default:
         message.channel.send('Ops! Não consegui achar essa opção. 😞')
           .then(msg => msg.delete({ timeout: 6000 }));
