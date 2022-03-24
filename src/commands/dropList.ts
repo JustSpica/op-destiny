@@ -20,7 +20,7 @@ export const command: ICommands = {
         '🕜 **Pacote daily⠆ Pacote de 3 cartas que pode ser aberto todo dia**\n' +
         '**Gratuito** (Chances maiores de high drop)\n\n' + 
         '🌟 **#Bonus: Pacote só com drop de carta acima de tier 4. Apenas uma carta**\n' + 
-        'Preço de compra: **2150xp points**\n' + 
+        'Preço de compra: **1950xp points**\n' + 
         '**TEMPO LIMITADO: até 30/03**'
     })
   }
