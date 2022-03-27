@@ -14,10 +14,10 @@ export const command: ICommands = {
 
     switch(cardOption) {
       case '1': 
-        DropSystem(message, { amount: 750, cardsNumber: 5 });
+        DropSystem(message, { amount: 575, cardsNumber: 5 });
         break;
       case '2': 
-        DropSystem(message, { amount: 1450, cardsNumber: 8 });
+        DropSystem(message, { amount: 750, cardsNumber: 8 });
         break;
       case 'd':
       case 'daily':
@@ -25,7 +25,7 @@ export const command: ICommands = {
         break;
       case 'b':
       case 'bonus':
-        DropSystem(message, { amount: 1950, cardsNumber: 1, limitedTime: true });
+        DropSystem(message, { amount: 780, cardsNumber: 1, limitedTime: true });
         break;
       default:
         message.channel.send('Ops! Não consegui achar essa opção. 😞')

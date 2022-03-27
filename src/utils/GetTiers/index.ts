@@ -5,15 +5,15 @@ export const getTiers = (cards: number) => {
   for (let index = 0; index < cards; index++) {
     const randomNumber = Number((Math.random() * 100).toFixed(4))
 
-    if(randomNumber < 0.010) {
+    if(randomNumber > 0 && randomNumber <= 0.5) {
       arr.push(6)
-    } else if(randomNumber < 0.1) {
+    } else if(randomNumber > 0.5 && randomNumber <= 2.5) {
       arr.push(5)
-    } else if(randomNumber < 3) {
+    } else if(randomNumber > 2.5 && randomNumber <= 12.5) {
       arr.push(4)
-    } else if(randomNumber < 12) {
+    } else if(randomNumber > 12.5 && randomNumber <= 32.5) {
       arr.push(3)
-    } else if(randomNumber < 40) {
+    } else if(randomNumber > 32.5 && randomNumber <= 60) {
       arr.push(2)
     } else {
       arr.push(1)
