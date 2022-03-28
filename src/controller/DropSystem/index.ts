@@ -46,6 +46,8 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
 
   let tiers: number[] = [];
 
+  console.log(message.author.username);
+
   if(limitedTime) {
     tiers = getHighBonus(cardsNumber)
   } else {
