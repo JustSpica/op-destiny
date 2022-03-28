@@ -40,24 +40,15 @@ export const event = {
       return reaction.message.channel.send(
         `${user}, você não pode vender cartas que você não possui né. 🙄`
       ).then(msg => msg.delete({ timeout: 8000 }));
-    };
+    } else {
+      userActive.cards.splice(userActive.cards.indexOf(cardId), 1);
+    }
 
-    await UsersDropModel.bulkWrite(
-      [
-        { updateOne: {
-          filter: { cards: cardId },
-          update: {
-            $unset: { "cards.$": "" }
-          }
-        }},
-        { updateOne: {
-          filter: { cards: null },
-          update: {
-            $pull: { "cards": null }
-          }
-        }}
-      ]
-    )
+    await UsersDropModel.findOneAndUpdate({
+      userId: user.id
+    }, {
+      $set: { cards: userActive.cards, }
+    })
 
     const { xp } = await LevelModel.findOne({
       userId: user.id
