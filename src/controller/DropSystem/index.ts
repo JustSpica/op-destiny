@@ -75,8 +75,6 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
   })
 
   cards.map(item => {
-    console.log(item);
-
     CardEmbed(message, { 
       color: '#F4F5FA', 
       title: `#${item.idCard} - ${capitalizeStr(item.name)}`,
