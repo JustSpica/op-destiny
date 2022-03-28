@@ -29,7 +29,7 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
     )
   }
 
-  /* if(user.xp < amount) {
+  if(user.xp < amount) {
     return message.channel.send(
       `${message.author}, você não possui xp points suficiente para comprar esse pacote\n` + 
       `Seu xp atual é de **${user.xp}xp points**`
@@ -42,7 +42,7 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
         xp: user.xp - amount,
       }
     })  
-  } */
+  }
 
   let tiers: number[] = [];
 
@@ -76,7 +76,7 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
 
   cards.map(item => {
     console.log(item);
-    
+
     CardEmbed(message, { 
       color: '#F4F5FA', 
       title: `#${item.idCard} - ${capitalizeStr(item.name)}`,
