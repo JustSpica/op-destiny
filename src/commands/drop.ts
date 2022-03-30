@@ -14,7 +14,7 @@ export const command: ICommands = {
 
     switch(cardOption) {
       case '1':
-        DropSystem(message, { amount: 150, cardsNumber: 1 });
+        DropSystem(message, { amount: 115, cardsNumber: 1 });
         break;
       case '2': 
         DropSystem(message, { amount: 425, cardsNumber: 3 });
