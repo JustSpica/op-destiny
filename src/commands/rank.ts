@@ -16,7 +16,7 @@ export const command: ICommands = {
     LevelModel.find({}).sort({xp: -1}).limit(5).then(response => {
       embed
         .setColor('#F4F5FA')
-        .setAuthor('Op. Destiny', 'https://i.imgur.com/7A5FaAn.jpg')
+        .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
         .setTitle('💎 Rank do Servidor 💎')
         .setDescription('Esse são os TOP 5 do servidor:')
         .addFields(response.map((item, index) => (

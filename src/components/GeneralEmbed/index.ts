@@ -19,7 +19,7 @@ export const GeneralEmbed = (
 
   embed
     .setColor(color)
-    .setAuthor('Op. Destiny', 'https://i.imgur.com/7A5FaAn.jpg')
+    .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
     .setTitle(title)
     .setDescription(description)
 

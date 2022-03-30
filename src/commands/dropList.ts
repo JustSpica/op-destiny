@@ -14,9 +14,9 @@ export const command: ICommands = {
       description: 
         'Gaste seus xp points no servidor e tente a sorte para conseguir ainda mais pontos.\n\n' + 
         '📦 **#1 pacote⠆ Contêm um total de 3 drop de cartas**\n' +
-        'Preço de compra: **525xp points**\n\n' + 
+        'Preço de compra: **425xp points**\n\n' + 
         '📦 **#2 pacote⠆ Contêm um total de 5 drop de cartas**\n' + 
-        'Preço de compra: **755xp points**\n\n' + 
+        'Preço de compra: **625xp points**\n\n' + 
         '🕜 **Pacote daily⠆ Pacote de 3 cartas que pode ser aberto todo dia**\n' +
         '**Gratuito** (Chances maiores de high drop)\n\n' + 
         '🌟 **#Bonus: Pacote com drop de uma carta tier 4 ou superior.**\n' + 

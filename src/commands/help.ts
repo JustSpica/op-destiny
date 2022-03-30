@@ -19,8 +19,8 @@ export const command: ICommands = {
       embed
         .setColor('#F4F5FA')
         .setTitle('Comandos de ajuda do servidor')
-        .setAuthor('Op. Destiny', 'https://i.imgur.com/7A5FaAn.jpg')
-        .setThumbnail('https://i.imgur.com/7A5FaAn.jpg')
+        .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
+        .setThumbnail('https://i.imgur.com/lkMXyJ1.gif')
         .setDescription(
           `Opa ${message.author.username}, parece que você está um pouco perdido ` + 
           `com os meus comandos. Então aqui está uma lista completa com todos eles ` + 

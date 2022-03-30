@@ -26,7 +26,7 @@ export const command: ICommands = {
     embed
       .setColor('#F4F5FA')
       .setTitle(triggerGreeting(message.author.username))
-      .setAuthor('Op. Destiny', 'https://i.imgur.com/7A5FaAn.jpg')
+      .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
       .setThumbnail(String(message.author.avatarURL({ 
         dynamic: true, 
         format: "png", 

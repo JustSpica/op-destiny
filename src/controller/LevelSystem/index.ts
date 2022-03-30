@@ -49,7 +49,7 @@ export const LevelSystem = async (message: Message, client: Client) => {
 
       embed
         .setColor('#F4F5FA')
-        .setAuthor('Op. Destiny', 'https://i.imgur.com/7A5FaAn.jpg')
+        .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
         .setTitle(`🎉 Level Up de ${message.author} 🎉`)
         .setDescription(
           `Parabéns ${message.author}, você acabou de upar no servidor para o **Level${level}**\n`+
