@@ -82,7 +82,7 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
       title: `#${item.idCard} - ${capitalizeStr(item.name)}`,
       description: 
         `Anime: **${capitalizeStr(item.anime)}**\n` + 
-        `Valor de venda: **${item.amount}** xp points  <:ByteCoins:950614195290898464>` +
+        `Valor de venda: **${item.amount}** xp points  <:ByteCoins:950614195290898464>\n` +
         `Carta de: **${message.author.username}**`,
       linkURL: item.linkURL
     }).then(msg => msg.react('<:ByteCoins:950614195290898464>'))
