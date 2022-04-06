@@ -60,6 +60,14 @@ export const command: ICommands = {
         return message.channel.send(embed);
       }
 
+      let totalXP = 0;
+
+      for (let index = 0; index < cardsArr.length; index++) {
+        const cardValue = cardsArr[index].amount
+
+        totalXP += cardValue;
+      }
+
       embed
         .setColor('#F4F5FA')
         .setTitle(`Essas são suas cartas ${message.author.username} 😊`)
@@ -69,10 +77,10 @@ export const command: ICommands = {
           format: "png", 
           size: 1024 
         })))
-        .setDescription('Utilize `op!cards <id(s)>` para vender uma carta pelo meu valor.'+ 
+        .setDescription('tilize `op!cards <id(s)>` para vender uma carta pelo meu valor.'+ 
           cardsArr.map(item => (
             `\n\n#${item.idCard}⠆ ${capitalizeStr(item.name)}: **${item.amount}** xp points  <:ByteCoins:950614195290898464>`
-          ))
+          )) + `\n\n\nTotal: **${totalXP}** xp points  <:ByteCoins:950614195290898464>`
         )
 
       return message.channel.send(embed);
