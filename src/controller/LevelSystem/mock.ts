@@ -21,7 +21,7 @@ export default [
   },
   {
     level: 5,
-    xpBase: 12480,
+    xpBase: 20480,
     xpMultiplicator: 1
   },
 ]
