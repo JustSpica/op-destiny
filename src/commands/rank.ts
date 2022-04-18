@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
 
-import { LevelModel } from "../db/models/LevelModel";
+import { UserModel } from '../db/models/UsersModel';
 
 import { ICommands } from "../types";
 
@@ -13,7 +13,7 @@ export const command: ICommands = {
 
     const embed = new MessageEmbed();
 
-    LevelModel.find({}).sort({xp: -1}).limit(5).then(response => {
+    UserModel.find({}).sort({xp: -1}).limit(5).then(response => {
       embed
         .setColor('#F4F5FA')
         .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
@@ -22,7 +22,7 @@ export const command: ICommands = {
         .addFields(response.map((item, index) => (
           {
             name: `<:statusOnline:928045571128827904> ${index + 1}º Lugar \n`,
-            value: `Player: **${item.userName}**\n Level: **${item.level}** \n XP atual: **${item.xp}**xp\n⠀`
+            value: `Player: **${item.name}**\n Level: **${item.level.value}** \n XP atual: **${item.level.xp}**xp\n⠀`
           }
         )))
 

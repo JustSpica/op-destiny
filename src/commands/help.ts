@@ -40,8 +40,8 @@ export const command: ICommands = {
       embed
         .setColor('#F4F5FA')
         .setTitle(`Comando: ${capitalizeStr(targetCommand.name)}`)
-        .setAuthor('Op. Destiny', 'https://i.imgur.com/7A5FaAn.jpg')
-        .setThumbnail('https://i.imgur.com/7A5FaAn.jpg')
+        .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
+        .setThumbnail('https://i.imgur.com/lkMXyJ1.gif')
         .setDescription(
           `Descrição: ${targetCommand.description}\n\n` + 
           `Outro jeito de chamar esse comando: \`${targetCommand.aliases?.join(', ')}\`` + 

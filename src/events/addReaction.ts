@@ -1,8 +1,7 @@
 import { MessageReaction, User, PartialUser, Message } from 'discord.js';
 
 import { CardsModel } from '../db/models/CardsModel'
-import { LevelModel } from '../db/models/LevelModel';
-import { UsersDropModel } from '../db/models/UsersDropModel';
+import { UserModel } from '../db/models/UsersModel';
 
 export const event = {
   name: 'messageReactionAdd',
@@ -10,7 +9,7 @@ export const event = {
   execute: async (reaction: MessageReaction, user: User | PartialUser) => {
     if(user.bot) return;
 
-    if(reaction.emoji.name !== 'ByteCoins') return;
+    if(reaction.emoji.name !== 'DTC') return;
 
     const nameSelected = reaction.message?.embeds[0]?.title?.toLowerCase()
     if(!nameSelected) return;
@@ -21,15 +20,15 @@ export const event = {
 
     if(!cardSelected) return;
 
-    let userActive = await UsersDropModel.findOne({
-      userId: user.id
+    let userActive = await UserModel.findOne({
+      idUser: user.id
     })
 
     if(!userActive) {
       return reaction.message.channel.send(
         `${user}, você ainda não girou nenhum pacote de cartas, então não tenho você no sistema.\n` + 
         `De uma olhada nas opções disponíveis com o comando **op!dropList**. 😊`
-      ).then(msg => msg.delete({ timeout: 10000 }));
+      ).then(msg => msg.delete({ timeout: 6000 }));
     }
 
     const cardId = userActive.cards.find(item => 
@@ -38,25 +37,21 @@ export const event = {
 
     if(!cardId) {
       return reaction.message.channel.send(
-        `${user}, você não pode vender cartas que você não possui né. 🙄`
-      ).then(msg => msg.delete({ timeout: 8000 }));
+        `${user}, você não possui essa carta no seu inventário.`
+      ).then(msg => msg.delete({ timeout: 6000 }));
     } else {
       userActive.cards.splice(userActive.cards.indexOf(cardId), 1);
     }
 
-    await UsersDropModel.findOneAndUpdate({
-      userId: user.id
+    const { coins } = userActive
+
+    await UserModel.findOneAndUpdate({
+      idUser: user.id,
     }, {
-      $set: { cards: userActive.cards, }
+      $set: { 
+        cards: userActive.cards,
+        coins: coins + cardSelected.amount
+      }
     })
-
-    const { xp } = await LevelModel.findOne({
-      userId: user.id
-    })
-
-    await LevelModel.findOneAndUpdate(
-      { userId: user.id },
-      { $set: { xp: xp + cardSelected.amount } }
-    )
   }
 }

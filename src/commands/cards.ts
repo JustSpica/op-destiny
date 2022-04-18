@@ -2,7 +2,8 @@ import { MessageEmbed } from "discord.js";
 import { CardEmbed } from "../components/CardEmbed";
 
 import { CardsModel, CardsModelType } from "../db/models/CardsModel";
-import { UsersDropModel } from "../db/models/UsersDropModel";
+import { UserModel } from '../db/models/UsersModel';
+
 import { capitalizeStr } from "../functions/capitalize";
 
 import { ICommands } from "../types";
@@ -10,29 +11,29 @@ import { ICommands } from "../types";
 export const command: ICommands = {
   name: 'cards',
   description: 
-    "Lista todas as cartas que você possui." + 
-    "Para vender suas cartas informe o(s) id(s) da(s) carta(s) que deseja vender separados.",
+    "Lista todas as cartas que você possui.",
   aliases: ['myCards'],
   usage: '<cardIndex>',
   execute: async (message, args) => {
     if(message.channel.type !== 'dm') return;
 
+    const cardId = args[0];
     const embed = new MessageEmbed()
 
-    let userActive = await UsersDropModel.findOne({
-      userId: message.author.id,
+    let userActive = await UserModel.findOne({
+      idUser: message.author.id,
     })
 
     if(!userActive) {
       return message.channel.send(
         `Ops! ${message.author}, eu não tenho você cadastrado nesse sistema. ` + 
         `Você precisa girar alguns pacotes de cartas para usar esse comando. 🙂`
-      ).then(msg => msg.delete({ timeout: 10000 }));
+      ).then(msg => msg.delete({ timeout: 6000 }));
     }
 
     let allCards = await CardsModel.find({})
 
-    if(args.length === 0) {
+    if(!cardId) {
       const cardsArr: CardsModelType[]  = [];
 
       for (let index = 0; index < userActive.cards.length; index++) {
@@ -40,7 +41,7 @@ export const command: ICommands = {
           item.idCard === userActive?.cards[index]
         )
 
-        cardsArr.push(cardSelected!);
+        cardsArr.push(cardSelected as CardsModelType);
       }
 
       if(cardsArr.length === 0) {
@@ -77,40 +78,30 @@ export const command: ICommands = {
           format: "png", 
           size: 1024 
         })))
-        .setDescription('tilize `op!cards <id(s)>` para vender uma carta pelo meu valor.'+ 
+        .setDescription('utilize `op!cards <id>` para ver sua carta 😀.'+ 
           cardsArr.map(item => (
-            `\n\n#${item.idCard}⠆ ${capitalizeStr(item.name)}: **${item.amount}** xp points  <:ByteCoins:950614195290898464>`
-          )) + `\n\n\nTotal: **${totalXP}** xp points  <:ByteCoins:950614195290898464>`
+            `\n\n#${item.idCard}⠆ ${capitalizeStr(item.name)}: **${item.amount}** DTC <:DTC:965680653255446629>`
+          )) + `\n\n\nTotal: **${totalXP}** DTC <:DTC:965680653255446629>`
         )
 
       return message.channel.send(embed);
-    }
-
-    const cards = args.map(idCard => {
-      const newId = userActive?.cards.find(item => item === idCard);
-     
-      if(!newId) return;
+    } else {
+      const newCardId = userActive.cards.find(item => item === cardId)
       
-      const cardSelected = allCards.find(item => item.idCard === newId)
+      if(!newCardId) return
 
-      return cardSelected as CardsModelType;
-    })
+      const card = allCards.find(item => item.idCard === newCardId);
 
-    if(!cards.every(item => item !== undefined)) {
-      return message.channel.send(
-        `Ops! Algum id passado não foi achado na sua lista ou não é um id válido. Verifique e tente novamente.`
-      ).then(msg => msg.delete({ timeout: 6000 }));
-    }
+      if(!card) return;
 
-    cards.map(item => {
       CardEmbed(message, { 
         color: '#F4F5FA', 
-        title: `#${item?.idCard} - ${capitalizeStr(String(item?.name))}`,
+        title: `#${card.idCard} - ${capitalizeStr(String(card.name))}`,
         description: 
-          `Anime: **${capitalizeStr(String(item?.anime))}**\n` + 
-          `Valor de venda: **${item?.amount}** xp points  <:ByteCoins:950614195290898464>`,
-        linkURL: String(item?.linkURL)
-      }).then(msg => msg.react('<:ByteCoins:950614195290898464>'))
-    })
+          `Anime: **${capitalizeStr(String(card.anime))}**\n` + 
+          `Valor de venda: **${card.amount}** DTC <:DTC:965680653255446629>`,
+        linkURL: String(card.linkURL)
+      })
+    }
   }
 }

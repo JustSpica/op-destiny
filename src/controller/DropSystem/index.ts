@@ -2,13 +2,11 @@
 
 import { CardEmbed } from "../../components/CardEmbed";
 
-import { LevelModel, LevelModelType } from "../../db/models/LevelModel";
-import { UsersDropModel } from "../../db/models/UsersDropModel";
+import { UserModel, IUserModel } from '../../db/models/UsersModel';
 
 import { capitalizeStr } from "../../functions/capitalize";
 
 import { getCards } from "../../utils/GetCards";
-import { getHighBonus } from "../../utils/GetHighBonus";
 import { getTiers } from "../../utils/GetTiers";
 
 type DropSystemProps = {
@@ -18,9 +16,9 @@ type DropSystemProps = {
 }
 
 export const DropSystem = async (message: Message, { amount, cardsNumber, limitedTime }: DropSystemProps) => {
-  const user: LevelModelType | null = await LevelModel.findOne({
-    userId: message.author.id,
-  });
+  const user: IUserModel | null = await UserModel.findOne({
+    idUser: message.author.id,
+  })
 
   if(!user) {
     return message.channel.send(
@@ -29,27 +27,25 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
     )
   }
 
-  if(user.xp < amount) {
+  if(user.coins < amount) {
     return message.channel.send(
-      `${message.author}, você não possui xp points suficiente para comprar esse pacote\n` + 
-      `Seu xp atual é de **${user.xp}xp points**`
+      `${message.author}, você não possui Destiny coins (DTC) suficientes para comprar esse pacote\n` + 
+      `O valor atual na sua carteira é de: **${user.coins} DTC**`
     ).then(msg => msg.delete({ timeout: 6000 }));
   } else {
-    await LevelModel.findOneAndUpdate({
-      userId: message.author.id,
+    await UserModel.findOneAndUpdate({
+      idUser: message.author.id,
     }, {
       $set: {
-        xp: user.xp - amount,
+        coins: user.coins - amount
       }
-    })  
+    })
   }
 
   let tiers: number[] = [];
 
-  console.log(message.author.username);
-
   if(limitedTime) {
-    tiers = getHighBonus(cardsNumber)
+    // Lógica pacote bonus
   } else {
     tiers = getTiers(cardsNumber)
   }
@@ -58,23 +54,11 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
   const cards = await getCards(tiers);
   const cardsId = cards.map(item => item.idCard)
 
-  const userDrop = await UsersDropModel.findOne({
-    userId: message.author.id,
-  })
-
-  if(!userDrop) {
-    await UsersDropModel.create({
-      userName: message.author.username,
-      userId: message.author.id,
-      cards: []
-    })
-  }
-
-  await UsersDropModel.findOneAndUpdate({
-    userId: message.author.id,
+  await UserModel.findOneAndUpdate({
+    idUser: message.author.id,
   }, {
-    $push: { cards: cardsId }
-  })
+    $push: { cards: cardsId}
+  });
 
   cards.map(item => {
     CardEmbed(message, { 
@@ -82,9 +66,9 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
       title: `#${item.idCard} - ${capitalizeStr(item.name)}`,
       description: 
         `Anime: **${capitalizeStr(item.anime)}**\n` + 
-        `Valor de venda: **${item.amount}** xp points  <:ByteCoins:950614195290898464>\n` +
+        `Valor de venda: **${item.amount}** DTC <:DTC:965680653255446629>\n` +
         `Carta de: **${message.author.username}**`,
       linkURL: item.linkURL
-    }).then(msg => msg.react('<:ByteCoins:950614195290898464>'))
+    }).then(msg => msg.react('<:DTC:965680653255446629>'))
   })
 }

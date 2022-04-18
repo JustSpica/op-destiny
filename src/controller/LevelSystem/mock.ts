@@ -1,27 +1,42 @@
 export default [
   {
     level: 1,
-    xpBase: 0,
-    xpMultiplicator: 1.8
+    xpToThisLevel: 0,
   },
   {
     level: 2,
-    xpBase: 780,
-    xpMultiplicator: 1.3
+    xpToThisLevel: 780,
   },
   {
     level: 3,
-    xpBase: 3120,
-    xpMultiplicator: 1
+    xpToThisLevel: 1950,
   },
   {
     level: 4,
-    xpBase: 7020,
-    xpMultiplicator: 0.4
+    xpToThisLevel: 4875,
   },
   {
     level: 5,
-    xpBase: 20480,
-    xpMultiplicator: 1
+    xpToThisLevel: 12187,
+  },
+  {
+    level: 6,
+    xpToThisLevel: 30468,
+  },
+  {
+    level: 7,
+    xpToThisLevel: 76171,
+  },
+  {
+    level: 8,
+    xpToThisLevel: 190427,
+  },
+  {
+    level: 9,
+    xpToThisLevel: 476068,
+  },
+  {
+    level: 10,
+    xpToThisLevel: 1190171,
   },
 ]

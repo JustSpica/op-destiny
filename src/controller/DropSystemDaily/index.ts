@@ -2,8 +2,7 @@ import { Message } from 'discord.js'
 
 import { CardEmbed } from '../../components/CardEmbed';
 
-import { LevelModel, LevelModelType } from "../../db/models/LevelModel";
-import { UsersDropModel } from '../../db/models/UsersDropModel';
+import { IUserModel, UserModel } from '../../db/models/UsersModel';
 
 import { capitalizeStr } from '../../functions/capitalize';
 import { timestampToDate } from '../../functions/convertDate';
@@ -12,9 +11,9 @@ import { getCards } from '../../utils/GetCards';
 import { getTiersDaily } from '../../utils/GetTiersDaily';
 
 export const DropSystemDaily = async (message: Message, cardsNumber: number) => {
-  const user: LevelModelType | null = await LevelModel.findOne({
-    userId: message.author.id,
-  });
+  let user: IUserModel | null = await UserModel.findOne({
+    idUser: message.author.id,
+  })
 
   if(!user) {
     return message.channel.send(
@@ -23,26 +22,13 @@ export const DropSystemDaily = async (message: Message, cardsNumber: number) => 
     )
   }
 
-  let userDrop = await UsersDropModel.findOne({
-    userId: message.author.id,
-  })
-
-  if(!userDrop) {
-    userDrop = await UsersDropModel.create({
-      userName: message.author.username,
-      userId: message.author.id,
-      cards: [],
-      timestamp: Date.now() - 86400000,
-    })
-  }
-
-  if(Date.now() - userDrop.timestamp > 86400000 || !userDrop.timestamp) {
+  if(Date.now() - user.timestamp > 86400000) {
     const tiers = getTiersDaily(cardsNumber);
     const cards = await getCards(tiers);
     const cardsId = cards.map(item => item.idCard)
-  
-    await UsersDropModel.findOneAndUpdate({
-      userId: message.author.id,
+
+    await UserModel.findOneAndUpdate({
+      idUser: message.author.id,
     }, {
       $push: { cards: cardsId },
       $set: { timestamp: Date.now() }
@@ -54,14 +40,14 @@ export const DropSystemDaily = async (message: Message, cardsNumber: number) => 
         title: `#${item.idCard} - ${capitalizeStr(item.name)}`,
         description: 
           `Anime: **${capitalizeStr(item.anime)}**\n` + 
-          `Valor de venda: **${item.amount}** xp points  <:ByteCoins:950614195290898464>`,
+          `Valor de venda: **${item.amount}** DTC <:DTC:965680653255446629>`,
         linkURL: item.linkURL
-      }).then(msg => msg.react('<:ByteCoins:950614195290898464>'))
+      }).then(msg => msg.react('<:DTC:965680653255446629>'))
     })
   } else {
     message.channel.send(
       `${message.author} seu pacote daily ainda não está disponivel.\n` + 
-      `**Restante:** ${timestampToDate(86400000 - (Date.now() - userDrop.timestamp))}`
+      `**Restante:** ${timestampToDate(86400000 - (Date.now() - user.timestamp))}`
     ).then(msg => msg.delete({ timeout: 8000 }))
   }
 }

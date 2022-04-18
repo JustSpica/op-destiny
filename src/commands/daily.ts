@@ -1,17 +1,17 @@
-import { DropSystem } from "../controller/DropSystem";
 import { DropSystemDaily } from "../controller/DropSystemDaily";
 
 import { ICommands } from "../types";
 
 export const command: ICommands = {
-  name: 'drop',
-  description: 'Comando usado para dropar cartas em um canal de texto',
-  usage: '<packageID>',
+  name: 'daily',
+  description: 'Comando usado para pegar seu pacote diário de cartas',
   execute: async (message, args) => {
     if(message.channel.type === 'dm') return;
 
     if(message.channel.id !== '952779254960107580') return;
+    
+    if(args.length !== 0) return;
 
-    DropSystem(message, { amount: 250, cardsNumber: 1 });
+    DropSystemDaily(message, 5)
   }
 }
