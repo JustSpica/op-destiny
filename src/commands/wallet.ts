@@ -13,7 +13,7 @@ export const command: ICommands = {
   execute: async (message, args) => {
     const embed = new MessageEmbed();
 
-    const users: IUserModel[] = await UserModel.find({}).sort({xp: -1})
+    const users: IUserModel[] = await UserModel.find({}).sort({ level : -1})
 
     const user = users.find(item => item.idUser === message.author.id);
     const index = users.findIndex(item => item.idUser === message.author.id);
