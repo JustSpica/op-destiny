@@ -8,7 +8,7 @@ export const event = {
   execute(client: Client) {
     console.log(`Bot ${client.user?.tag} is running!`)
 
-    client.user?.setActivity(`Em Manutenção 🔧`, {
+    client.user?.setActivity(`${prefix}help 📕`, {
       type: "PLAYING"
     });
   }
