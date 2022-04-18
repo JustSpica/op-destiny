@@ -13,7 +13,7 @@ export const command: ICommands = {
 
     const embed = new MessageEmbed();
 
-    UserModel.find({}).sort({xp: -1}).limit(5).then(response => {
+    UserModel.find({}).sort({ level : -1 }).limit(5).then(response => {
       embed
         .setColor('#F4F5FA')
         .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
