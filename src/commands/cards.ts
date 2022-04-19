@@ -79,7 +79,7 @@ export const command: ICommands = {
           size: 1024 
         })))
         .setDescription('utilize `op!cards <id>` para ver sua carta 😀.\n'+ 
-          cardsArr.map(item => (
+          cardsArr.slice(0, 30).map(item => (
             `\n#${item.idCard}⠆ ${capitalizeStr(item.name)}: **${item.amount}** DTC <:DTC:965680653255446629>`
           )) + `\n\n\nTotal: **${totalXP}** DTC <:DTC:965680653255446629>`
         )
