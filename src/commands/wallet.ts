@@ -8,7 +8,7 @@ import { ICommands } from "../types";
 
 export const command: ICommands = {
   name: 'wallet',
-  description: "Usado para mostrar suas finanças no servidor. (Pode ser usado na dm)",
+  description: "Usado para mostrar suas finanças no servidor.",
   aliases: ['myLevel', 'userRank', 'meuRanque'],
   execute: async (message, args) => {
     const embed = new MessageEmbed();
