@@ -47,6 +47,7 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
   if(limitedTime) {
     // Lógica pacote bonus
   } else {
+    console.log(message.author.username)
     tiers = getTiers(cardsNumber)
   }
 

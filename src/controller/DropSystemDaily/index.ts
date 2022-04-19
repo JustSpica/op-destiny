@@ -22,6 +22,8 @@ export const DropSystemDaily = async (message: Message, cardsNumber: number) => 
     )
   }
 
+  console.log(message.author.username)
+
   if(Date.now() - user.timestamp > 86400000) {
     const tiers = getTiersDaily(cardsNumber);
     const cards = await getCards(tiers);

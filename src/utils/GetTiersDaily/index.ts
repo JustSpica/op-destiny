@@ -5,6 +5,8 @@ export const getTiersDaily = (cards: number) => {
   for (let index = 0; index < cards; index++) {
     const randomNumber = Number((Math.random() * 100).toFixed(4))
 
+    console.log(`Valor: ${randomNumber} %`)
+
     if(randomNumber > 0 && randomNumber <= 0.2) {
       arr.push(6)
     } else if(randomNumber > 0.2 && randomNumber <= 1.2) {
