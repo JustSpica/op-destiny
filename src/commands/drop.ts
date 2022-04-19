@@ -1,5 +1,4 @@
 import { DropSystem } from "../controller/DropSystem";
-import { DropSystemDaily } from "../controller/DropSystemDaily";
 
 import { ICommands } from "../types";
 
