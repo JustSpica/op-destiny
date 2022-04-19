@@ -4,6 +4,7 @@ import { CardsModel } from "../../db/models/CardsModel";
 
 import { UserModel, IUserModel } from "../../db/models/UsersModel";
 import { capitalizeStr } from "../../functions/capitalize";
+import { randomNumbers } from "../../functions/randomNumbers";
 
 import { upgradeTiers } from "../../utils/UpgradeTiers";
 
@@ -31,21 +32,24 @@ export const UpgradeSystem = async (message: Message, amount: number) => {
       `O valor atual na sua carteira é de: **${user.coins} DTC**`
     ).then(msg => msg.delete({ timeout: 6000 }));
   } else {
-    /* await UserModel.findOneAndUpdate({
+    await UserModel.findOneAndUpdate({
       idUser: message.author.id,
     }, {
       $set: {
         coins: user.coins - amount
       }
-    }) */
+    })
   }
 
   console.log(message.author.username)
 
   const tier = upgradeTiers(amount);
-  const card = await CardsModel.findOne({
+  const allTierCards = await CardsModel.find({
     tier: tier,
   });
+
+  const randomIndex = randomNumbers(0, allTierCards.length - 1);
+  const card = allTierCards[randomIndex];
 
   if(!card) return;
 
