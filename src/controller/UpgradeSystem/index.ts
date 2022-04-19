@@ -1,6 +1,9 @@
 import { Message } from "discord.js";
+import { CardEmbed } from "../../components/CardEmbed";
+import { CardsModel } from "../../db/models/CardsModel";
 
 import { UserModel, IUserModel } from "../../db/models/UsersModel";
+import { capitalizeStr } from "../../functions/capitalize";
 
 import { upgradeTiers } from "../../utils/UpgradeTiers";
 
@@ -37,5 +40,29 @@ export const UpgradeSystem = async (message: Message, amount: number) => {
     }) */
   }
 
-  upgradeTiers(amount);
+  console.log(message.author.username)
+
+  const tier = upgradeTiers(amount);
+  const card = await CardsModel.findOne({
+    tier: tier,
+  });
+
+  if(!card) return;
+
+  await UserModel.findOneAndUpdate({
+    idUser: message.author.id,
+  }, {
+    $push: { cards: card.idCard}
+  });
+
+  
+  CardEmbed(message, { 
+    color: '#F4F5FA', 
+    title: `#${card.idCard} - ${capitalizeStr(card.name)}`,
+    description: 
+      `Anime: **${capitalizeStr(card.anime)}**\n` + 
+      `Valor de venda: **${card.amount}** DTC <:DTC:965680653255446629>\n` +
+      `Carta de: **${message.author.username}**`,
+    linkURL: card.linkURL
+  }).then(msg => msg.react('<:DTC:965680653255446629>'))
 }

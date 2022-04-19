@@ -69,18 +69,20 @@ export const command: ICommands = {
         totalXP += cardValue;
       }
 
+      const cardsToShow = cardsArr.slice(0, 25).sort();
+
       embed
         .setColor('#F4F5FA')
-        .setTitle(`Essas são suas cartas ${message.author.username} 😊`)
+        .setTitle(`Essas são suas primeiras ${cardsToShow.length} cartas`)
         .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
         .setThumbnail(String(message.author.avatarURL({ 
           dynamic: true, 
           format: "png", 
           size: 1024 
         })))
-        .setDescription('utilize `op!cards <id>` para ver sua carta 😀.\n'+ 
-          cardsArr.slice(0, 30).map(item => (
-            `\n#${item.idCard}⠆ ${capitalizeStr(item.name)}: **${item.amount}** DTC <:DTC:965680653255446629>`
+        .setDescription(`Seu total de cartas é: **${cardsArr.length}**.\n`+ 
+          cardsToShow.map(item => (
+            `\n\n#${item.idCard}⠆ ${capitalizeStr(item.name)}: **${item.amount}** DTC <:DTC:965680653255446629>`
           )) + `\n\n\nTotal: **${totalXP}** DTC <:DTC:965680653255446629>`
         )
 
