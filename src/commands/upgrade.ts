@@ -1,17 +1,25 @@
+import { MessageEmbed } from "discord.js";
 import { UpgradeSystem } from "../controller/UpgradeSystem";
 
 import { ICommands } from "../types";
 
 export const command: ICommands = {
   name: 'upgrade',
-  description: 'Comando usado para testar sua sorte com o novo sistema de upgrade',
+  description: 'Comando usado para transformar 5 cards iguais em 1 card aleatório de tier superior',
   aliases: ['up'],
-  usage: '<amount>',
+  usage: '<idCard>',
   execute: async (message, args) => {
     if(message.channel.type === 'dm') return;
 
-    const amount = Number(args[0]);
+    const idCard = args[0];
 
-    UpgradeSystem(message, amount);
+    if(!idCard) {
+      return message.channel.send(
+        `Ops! ${message.author}, você precisa informar o id de uma carta que você tenha no ` + 
+         `seu inventário.`
+      )
+    }
+
+    UpgradeSystem(message, idCard);
   }
 }

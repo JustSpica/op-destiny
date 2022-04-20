@@ -12,10 +12,9 @@ import { getTiers } from "../../utils/GetTiers";
 type DropSystemProps = {
   amount: number;
   cardsNumber: number;
-  limitedTime?: boolean;
 }
 
-export const DropSystem = async (message: Message, { amount, cardsNumber, limitedTime }: DropSystemProps) => {
+export const DropSystem = async (message: Message, { amount, cardsNumber }: DropSystemProps) => {
   const user: IUserModel | null = await UserModel.findOne({
     idUser: message.author.id,
   })
@@ -42,15 +41,8 @@ export const DropSystem = async (message: Message, { amount, cardsNumber, limite
     })
   }
 
-  let tiers: number[] = [];
-
-  if(limitedTime) {
-    // Lógica pacote bonus
-  } else {
-    console.log(message.author.username)
-    tiers = getTiers(cardsNumber)
-  }
-
+  console.log(message.author.username)
+  const tiers = getTiers(cardsNumber)
 
   const cards = await getCards(tiers);
   const cardsId = cards.map(item => item.idCard)

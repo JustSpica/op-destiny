@@ -6,9 +6,7 @@ import { UserModel, IUserModel } from "../../db/models/UsersModel";
 import { capitalizeStr } from "../../functions/capitalize";
 import { randomNumbers } from "../../functions/randomNumbers";
 
-import { upgradeTiers } from "../../utils/UpgradeTiers";
-
-export const UpgradeSystem = async (message: Message, amount: number) => {
+export const UpgradeSystem = async (message: Message, idCard: string) => {
   const user: IUserModel | null = await UserModel.findOne({
     idUser: message.author.id,
   })
@@ -20,53 +18,46 @@ export const UpgradeSystem = async (message: Message, amount: number) => {
     )
   }
 
-  if(!amount || amount === 0 || amount > 2000) {
+  const cards = user.cards.filter(item => item === idCard)
+
+  if(cards.length < 5) {
     return message.channel.send(
-      `Ops! ${message.author}, você só pode informar um valor entre 0 e 2000 DTC.`
-    ).then(msg => msg.delete({ timeout: 6000 }));
+      `Ops! ${message.author}, você precisa ter no minimo 5 cards iguais a esse para dar upgrade.` + 
+      `\n\nAtualmente você possui: **${cards.length}** cards com o id #${idCard}`
+    )
   }
 
-  if(user.coins < amount) {
-    return message.channel.send(
-      `${message.author}, você não possui Destiny coins (DTC) suficientes para usar esse recurso\n` + 
-      `O valor atual na sua carteira é de: **${user.coins} DTC**`
-    ).then(msg => msg.delete({ timeout: 6000 }));
-  } else {
-    await UserModel.findOneAndUpdate({
-      idUser: message.author.id,
-    }, {
-      $set: {
-        coins: user.coins - amount
-      }
-    })
-  }
+  const card = await CardsModel.findOne({
+    idCard: cards[0]
+  })
 
-  console.log(message.author.username)
-
-  const tier = upgradeTiers(amount);
   const allTierCards = await CardsModel.find({
-    tier: tier,
-  });
-
+    tier: card?.tier! + 1
+  })
   const randomIndex = randomNumbers(0, allTierCards.length - 1);
-  const card = allTierCards[randomIndex];
 
-  if(!card) return;
+  const newCard = allTierCards[randomIndex];
+  user.cards.push(newCard.idCard);
+ 
+  for (let index = 0; index < 5; index++) {
+    user.cards.splice(user.cards.indexOf(idCard), 1);
+  }
 
   await UserModel.findOneAndUpdate({
     idUser: message.author.id,
   }, {
-    $push: { cards: card.idCard}
-  });
-
+    $set: {
+      cards: user.cards
+    }
+  })
   
   CardEmbed(message, { 
     color: '#F4F5FA', 
-    title: `#${card.idCard} - ${capitalizeStr(card.name)}`,
+    title: `#${newCard.idCard} - ${capitalizeStr(newCard.name)}`,
     description: 
-      `Anime: **${capitalizeStr(card.anime)}**\n` + 
-      `Valor de venda: **${card.amount}** DTC <:DTC:965680653255446629>\n` +
+      `Anime: **${capitalizeStr(newCard.anime)}**\n` + 
+      `Valor de venda: **${newCard.amount}** DTC <:DTC:965680653255446629>\n` +
       `Carta de: **${message.author.username}**`,
-    linkURL: card.linkURL
+    linkURL: newCard.linkURL
   }).then(msg => msg.react('<:DTC:965680653255446629>'))
 }

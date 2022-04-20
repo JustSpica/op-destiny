@@ -10,6 +10,7 @@ export interface IUserModel {
     xp: number;
     timestamp: number;
   };
+  boosterTime?: number;
   timestamp: number;
 }
 
@@ -36,6 +37,11 @@ export const UserModel = model('users', new Schema<IUserModel>({
   },
   level: {
     type: Object,
+    required: true,
+    unique: false,
+  },
+  boosterTime: {
+    type: Number,
     required: true,
     unique: false,
   },
