@@ -24,7 +24,7 @@ export const command: ICommands = {
       .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
       .setThumbnail('https://i.imgur.com/lkMXyJ1.gif')
       .setDescription(allCards.map((item, index) => (
-        `• ${index + 1} - ${capitalizeStr(item.name)}: ${item.amount} DTC <:DTC:965680653255446629>\n\n`
+        `• ${index + 1} - ${capitalizeStr(item.name)}: ${item.amount} DTC <:DTC:965680653255446629>\n`
       )))
 
       return message.channel.send(embed);
