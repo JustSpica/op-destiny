@@ -15,8 +15,6 @@ export const command: ICommands = {
   aliases: ['myCards'],
   usage: '<cardIndex>',
   execute: async (message, args) => {
-    if(message.channel.type !== 'dm') return;
-
     const cardId = args[0];
     const embed = new MessageEmbed()
 
