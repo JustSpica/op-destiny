@@ -27,5 +27,6 @@ export const command: ICommands = {
         `• ${index + 1} - ${capitalizeStr(item.name)}: ${item.amount} DTC <:DTC:965680653255446629>\n\n`
       )))
 
+      return message.channel.send(embed);
   }
 }
