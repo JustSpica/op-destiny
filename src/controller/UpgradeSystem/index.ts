@@ -20,9 +20,9 @@ export const UpgradeSystem = async (message: Message, idCard: string) => {
 
   const cards = user.cards.filter(item => item === idCard)
 
-  if(cards.length < 5) {
+  if(cards.length < 3) {
     return message.channel.send(
-      `Ops! ${message.author}, você precisa ter no minimo 5 cards iguais a esse para dar upgrade.` + 
+      `Ops! ${message.author}, você precisa ter no minimo 3 cards iguais a esse para dar upgrade.` + 
       `\n\nAtualmente você possui: **${cards.length}** cards com o id #${idCard}`
     )
   }
@@ -39,7 +39,7 @@ export const UpgradeSystem = async (message: Message, idCard: string) => {
   const newCard = allTierCards[randomIndex];
   user.cards.push(newCard.idCard);
  
-  for (let index = 0; index < 5; index++) {
+  for (let index = 0; index < 3; index++) {
     user.cards.splice(user.cards.indexOf(idCard), 1);
   }
 
