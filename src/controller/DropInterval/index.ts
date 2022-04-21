@@ -16,7 +16,7 @@ import { getCards } from '../../utils/GetCards';
 import { getTiers } from '../../utils/GetTiers';
 
 export const DropInterval = async (client: Client) => {
-  const channel = await client.channels.fetch('952779254960107580') as TextChannel;
+  const channel = await client.channels.fetch('914991936002220122') as TextChannel;
   
   setInterval(async () => {
     const embed = new MessageEmbed();
@@ -36,9 +36,10 @@ export const DropInterval = async (client: Client) => {
         )
         .setImage(`${item.linkURL}`);
 
-        return channel.send(embed).then(
-          msg => msg.react('<:mojiYes:923960886325026827>')
-        )
+        return channel.send(embed).then(msg => {
+          msg.react('<:mojiYes:923960886325026827>')
+          msg.delete({ timeout: 60000 * 9.98 })
+        })
     })
   }, 60000 * 10)
 
