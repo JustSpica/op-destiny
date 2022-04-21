@@ -67,7 +67,7 @@ export const command: ICommands = {
         totalXP += cardValue;
       }
 
-      const cardsToShow = cardsArr.slice(0, 25).sort();
+      const cardsToShow = cardsArr.sort().slice(0, 25);
 
       embed
         .setColor('#F4F5FA')
