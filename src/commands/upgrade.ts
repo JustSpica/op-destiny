@@ -5,7 +5,7 @@ import { ICommands } from "../types";
 
 export const command: ICommands = {
   name: 'upgrade',
-  description: 'Comando usado para transformar 5 cards iguais em 1 card aleatório de tier superior',
+  description: 'Comando usado para transformar 3 cards iguais em 1 card aleatório de tier superior',
   aliases: ['up'],
   usage: '<idCard>',
   execute: async (message, args) => {
