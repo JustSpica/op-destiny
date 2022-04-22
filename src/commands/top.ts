@@ -14,7 +14,15 @@ export const command: ICommands = {
     "Mostra os 10 cards mais valiosos do servidor",
   aliases: ['r'],
   execute: async (message, args) => {
-    const allCards = await CardsModel.find({}).sort({ amount: -1 }).limit(10);
+    const allCards = await CardsModel.find({});
+
+    allCards.sort((x , y) => {
+      if(x.amount > y.amount) return -1;
+
+      if(x.amount < y.amount) return 1;
+
+      return 0;
+    }).splice(10)
 
     const embed = new MessageEmbed();
 
