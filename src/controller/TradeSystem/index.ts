@@ -1,11 +1,4 @@
-import { 
-  Client, 
-  Message, 
-  MessageEmbed,
-   MessageReaction, 
-   PartialUser, 
-   User 
-} from "discord.js";
+import { Message, MessageEmbed, MessageReaction, User } from "discord.js";
 import { v4 } from 'uuid';
 
 import { capitalizeStr } from "../../functions/capitalize";
@@ -21,7 +14,7 @@ interface ITrade {
 }
 
 export const TradeSystem = async (
-  message: Message, client: Client, { amount, idCard, idUserTarget }: ITrade
+  message: Message, { amount, idCard, idUserTarget }: ITrade
 ) => {
   const userTarget = await UserModel.findOne({
     idUser: idUserTarget,
@@ -70,116 +63,117 @@ export const TradeSystem = async (
 
   message.channel.send(
     `Trade criada com sucesso para: ${userTargetDiscord?.user}`
-  ).then(async () => {
-    const embed = new MessageEmbed();
+  )
 
-    embed
-      .setColor('#F4F5FA')
-      .setTitle(`#${tradeID} Trade criada com sucesso!`)
-      .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
-      .setDescription(
-        `${message.author.username}, acabou de abrir uma trade para o card **#${idCard} ${capitalizeStr(card.name)}** ` +
-        `no valor de: **${amount}** DTC <:DTC:965680653255446629>\n\n` +
-        `Dono do card: ${userTargetDiscord?.user}\n\n` +
-        `Valor de venda para Destiny: **${card.amount}** DTC <:DTC:965680653255446629>`
-      )
+  const embed = new MessageEmbed();
 
-    return message.channel.send(embed).then(msg => {
-      msg.react('✅');
-      msg.react('❌');
-    });
-  })
+  embed
+    .setColor('#F4F5FA')
+    .setTitle(`#${tradeID} Trade criada com sucesso!`)
+    .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
+    .setDescription(
+      `${message.author.username}, acabou de abrir uma trade para o card **#${idCard} ${capitalizeStr(card.name)}** ` +
+      `no valor de: **${amount}** DTC <:DTC:965680653255446629>\n\n` +
+      `Dono do card: ${userTargetDiscord?.user}\n\n` +
+      `Valor de venda para Destiny: **${card.amount}** DTC <:DTC:965680653255446629>`
+    )
 
-  client.on('messageReactionAdd', 
-    async (reaction: MessageReaction, user: User | PartialUser) => {
-      if(user.bot) return;
+  return message.channel.send(embed).then(msg => {
+    msg.react('✅');
+    msg.react('❌');
 
-      if(!reaction.message.embeds[0]) return;
+    const filter = (reaction: MessageReaction, user: User) => {
+      return ['✅', '❌'].includes(reaction.emoji.name) && !user.bot
+    }
 
-      const idTrade = reaction.message.embeds[0].title?.slice(1, 9)
+    msg.awaitReactions(filter, { max: 1, time: 2000, errors: ['time'] })
+      .then(async collected => {
+        const reaction = collected.first();
+        const user = reaction?.users.cache.last();
 
-      const trade = await TradesModel.findOne({
-        idTrade: idTrade,
-      })
+        const idTrade = reaction?.message.embeds[0].title?.slice(1, 9)
 
-      if(!trade) return;
-
-      if(user.id !== trade.vendorUser.id) {
-        return reaction.users.remove(user.id);
-      }
-
-      if(reaction.emoji.name === '❌') {
-
-        await TradesModel.findOneAndDelete({
-          idTrade: idTrade
+        const trade = await TradesModel.findOne({
+          idTrade: idTrade,
         })
+        if(!trade) return;
 
-        return reaction.message.reactions.removeAll();
-      }
+        if(reaction?.emoji.name === '❌') {
+          await TradesModel.findOneAndDelete({
+            idTrade: idTrade
+          })
 
-      if(reaction.emoji.name === '✅') {
-        const userVendor = await UserModel.findOne({
-          idUser: trade.vendorUser.id,
-        })
+          return reaction.message.reactions.removeAll();
+        }
 
-        const userBuyer = await UserModel.findOne({
-          idUser: trade.buyerUser.id,
-        })
+        if(reaction?.emoji.name === '✅') {
+          const userVendor = await UserModel.findOne({
+            idUser: trade.vendorUser.id,
+          })
 
-        if(!userBuyer) return;
+          const userBuyer = await UserModel.findOne({
+            idUser: trade.buyerUser.id,
+          })
+  
+          if(!userBuyer) return;
 
-        if(userBuyer.coins < trade.amount) {
+          if(userBuyer.coins < trade.amount) {
+            return message.channel.send(
+              `Ops!, o usuário ${userBuyer.name} não tem DTC's suficientes para ` + 
+              `finalizar essa troca.`
+            ).then(msg => {
+              reaction.users.remove(user?.id);
+              msg.delete({ timeout: 6000 })
+            })
+          }
+
+          if(!userVendor?.cards.find(item => item === trade.idCard)) {
+            return message.channel.send(
+              `${user}, você não possui mais essa carta no inventário.`
+            ).then(msg => {
+              reaction.users.remove(user?.id);
+              msg.delete({ timeout: 6000 })
+            });
+          }
+
+          userVendor.cards.splice(userVendor.cards.indexOf(trade.idCard), 1)
+
+          await UserModel.findOneAndUpdate({
+            idUser: userVendor.idUser
+          }, {
+            $set: {
+              cards: userVendor.cards,
+              coins: userVendor.coins + trade.amount
+            }
+          })
+
+          await UserModel.findOneAndUpdate({
+            idUser: userBuyer.idUser
+          }, {
+            $push: {
+              cards: trade.idCard
+            },
+            $set: {
+              coins: userBuyer.coins - trade.amount
+            }
+          })
+
+          await TradesModel.findOneAndDelete({
+            idTrade: idTrade
+          })
+
           return message.channel.send(
-            `Ops!, o usuário ${userBuyer.name} não tem DTC's suficientes para ` + 
-            `finalizar essa troca.`
-          ).then(msg => {
-            reaction.users.remove(user.id);
-            msg.delete({ timeout: 6000 })
+            `🌟Trade finalizada entre **${userBuyer.name}** e **${userVendor.name}** ` + 
+            `pelo card de id **#${trade.idCard}** pelo valor de **${trade.amount}** DTC <:DTC:965680653255446629>.`
+          ).then(() => {
+            reaction.message.reactions.removeAll();
           })
         }
-
-        if(!userVendor?.cards.find(item => item === trade.idCard)) {
-          return message.channel.send(
-            `${user}, você não possui mais essa carta no inventário.`
-          ).then(msg => {
-            reaction.users.remove(user.id);
-            msg.delete({ timeout: 6000 })
-          });
-        }
-
-        userVendor.cards.splice(userVendor.cards.indexOf(trade.idCard), 1)
-
-        await UserModel.findOneAndUpdate({
-          idUser: userVendor.idUser
-        }, {
-          $set: {
-            cards: userVendor.cards,
-            coins: userVendor.coins + trade.amount
-          }
-        })
-
-        await UserModel.findOneAndUpdate({
-          idUser: userBuyer.idUser
-        }, {
-          $push: {
-            cards: trade.idCard
-          },
-          $set: {
-            coins: userBuyer.coins - trade.amount
-          }
-        })
-
-        await TradesModel.findOneAndDelete({
-          idTrade: idTrade
-        })
-
-        return message.channel.send(
-          `🌟Trade finalizada entre **${userBuyer.name}** e **${userVendor.name}** ` + 
-          `pelo card de id **#${trade.idCard}** pelo valor de **${trade.amount}** DTC <:DTC:965680653255446629>.`
-        ).then(() => {
-          reaction.message.reactions.removeAll();
-        })
-      }
-    }
-  )
+      })
+      .catch(() => {
+        const idTrade = msg.embeds[0].title?.slice(1, 9)
+        
+        return message.channel.send(`A trade com o id ${idTrade} expirou!`);
+      })
+  });
 }

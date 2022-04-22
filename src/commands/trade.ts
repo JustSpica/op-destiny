@@ -16,6 +16,6 @@ export const command: ICommands = {
     const idCard = args[1];
     const amount = Number(args[2]);
 
-    return TradeSystem(message, client, { amount, idCard, idUserTarget })
+    TradeSystem(message, { amount, idCard, idUserTarget })
   }
 }
