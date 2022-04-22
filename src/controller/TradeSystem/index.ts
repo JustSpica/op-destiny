@@ -172,7 +172,9 @@ export const TradeSystem = async (
         return message.channel.send(
           `🌟Trade finalizada entre **${userBuyer.name}** e **${userVendor.name}** ` + 
           `pelo card de id **#${trade.idCard}** pelo valor de **${trade.amount}** DTC <:DTC:965680653255446629>.`
-        )
+        ).then(() => {
+          reaction.message.reactions.removeAll();
+        })
       }
     }
   )
