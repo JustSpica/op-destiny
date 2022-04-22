@@ -86,7 +86,7 @@ export const TradeSystem = async (
       return ['✅', '❌'].includes(reaction.emoji.name) && !user.bot
     }
 
-    msg.awaitReactions(filter, { max: 1, time: 2000, errors: ['time'] })
+    msg.awaitReactions(filter, { max: 1, time: 60000 * 5, errors: ['time'] })
       .then(async collected => {
         const reaction = collected.first();
         const user = reaction?.users.cache.last();
