@@ -42,7 +42,7 @@ export const UserModel = model('users', new Schema<IUserModel>({
   },
   boosterTime: {
     type: Number,
-    required: true,
+    required: false,
     unique: false,
   },
   timestamp: {
