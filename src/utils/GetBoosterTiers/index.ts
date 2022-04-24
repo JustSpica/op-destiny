@@ -6,7 +6,7 @@ export const getBoosterTiers = (value: number) => {
 
     console.log(`Valor: ${randomNumber} %`)
 
-    if(randomNumber > 0 && randomNumber <= 10) {
+    if(randomNumber > 0 && randomNumber <= 5) {
       arr.push(6);
     } else {
       arr.push(5);
