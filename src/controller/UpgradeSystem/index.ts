@@ -31,6 +31,12 @@ export const UpgradeSystem = async (message: Message, idCard: string) => {
     idCard: cards[0]
   })
 
+  if(card?.tier === 5) {
+    return message.channel.send(
+      `Ops! ${message.author}, o máximo que você pode upar suas cartas é até o Level 5 !`
+    )
+  }
+
   const allTierCards = await CardsModel.find({
     tier: card?.tier! + 1
   })
