@@ -38,10 +38,10 @@ export const DropInterval = async (client: Client) => {
 
         return channel.send(embed).then(msg => {
           msg.react('<:mojiYes:923960886325026827>')
-          msg.delete({ timeout: 14000 })
+          msg.delete({ timeout: 60000 * 4.99 })
         })
     })
-  }, 15000)
+  }, 60000 * 5)
 
   client.on('messageReactionAdd', 
     async (reaction: MessageReaction, user: User | PartialUser) => {
