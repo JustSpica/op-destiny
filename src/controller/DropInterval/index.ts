@@ -86,7 +86,7 @@ export const DropInterval = async (client: Client) => {
 
       return channel.send(
         `✨ **${user.username}** adquiriu o card **#${card?.idCard} ${capitalizeStr(String(card?.name))}** ✨`
-      )
+      ).then(msg => msg.delete({ timeout: 30000 }));
     }
   )
 }
