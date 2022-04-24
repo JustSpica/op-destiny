@@ -16,7 +16,7 @@ import { getCards } from '../../utils/GetCards';
 import { getTiers } from '../../utils/GetTiers';
 
 export const DropInterval = async (client: Client) => {
-  const channel = await client.channels.fetch('967649490326650920') as TextChannel;
+  const channel = await client.channels.fetch('914991936002220122') as TextChannel;
   
   setInterval(async () => {
     const embed = new MessageEmbed();
@@ -38,16 +38,20 @@ export const DropInterval = async (client: Client) => {
 
         return channel.send(embed).then(msg => {
           msg.react('<:mojiYes:923960886325026827>')
-          msg.delete({ timeout: 60000 * 9.98 })
+          msg.delete({ timeout: 14000 })
         })
     })
-  }, 60000 * 10)
+  }, 15000)
 
   client.on('messageReactionAdd', 
     async (reaction: MessageReaction, user: User | PartialUser) => {
       if(user.bot) return;
 
       if(reaction.emoji.name !== 'mojiYes') return
+
+      if(reaction.count === 1 && !reaction.users.cache.last()?.bot) {
+        return reaction.remove();
+      }
 
       const count = reaction.message.reactions.cache.find(
         item => item.count! <= 1
