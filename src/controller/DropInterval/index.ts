@@ -85,7 +85,7 @@ export const DropInterval = async (client: Client) => {
       })
 
       return channel.send(
-        `✨ Parabéns **${user.username}**, o card **${capitalizeStr(String(card?.name))}** agora é seu! ✨`
+        `✨ **${user.username}** adquiriu o card **#${card?.idCard} ${capitalizeStr(String(card?.name))}** ✨`
       )
     }
   )
