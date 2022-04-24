@@ -16,7 +16,7 @@ import { getCards } from '../../utils/GetCards';
 import { getTiers } from '../../utils/GetTiers';
 
 export const DropInterval = async (client: Client) => {
-  const channel = await client.channels.fetch('914991936002220122') as TextChannel;
+  const channel = await client.channels.fetch('967649490326650920') as TextChannel;
   
   setInterval(async () => {
     const embed = new MessageEmbed();
