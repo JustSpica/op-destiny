@@ -2,106 +2,108 @@ import { MessageEmbed } from "discord.js";
 import { CardEmbed } from "../components/CardEmbed";
 
 import { CardsModel, CardsModelType } from "../db/models/CardsModel";
-import { UserModel } from '../db/models/UsersModel';
+import { UserModel } from "../db/models/UsersModel";
 
 import { capitalizeStr } from "../functions/capitalize";
+import { pagination } from "../functions/pagination";
 
 import { ICommands } from "../types";
 
 export const command: ICommands = {
   name: 'cards',
-  description: 
-    "Lista todas as cartas que você possui.",
-  aliases: ['myCards'],
+  description: 'Lista todas as cartas que você possui.',
   usage: '<cardIndex>',
   execute: async (message, args) => {
-    const cardId = args[0];
-    const embed = new MessageEmbed()
+    const idCard = args[0]
 
-    let userActive = await UserModel.findOne({
+    let user = await UserModel.findOne({
       idUser: message.author.id,
     })
 
-    if(!userActive) {
+    if(!user) {
       return message.channel.send(
-        `Ops! ${message.author}, eu não tenho você cadastrado nesse sistema. ` + 
-        `Você precisa girar alguns pacotes de cartas para usar esse comando. 🙂`
+        `Ops! ${message.author}, parece que eu não tenho você cadastrado nesse sistema.`
       ).then(msg => msg.delete({ timeout: 6000 }));
     }
 
-    let allCards = await CardsModel.find({})
+    let allCards = await CardsModel.find({});
 
-    if(!cardId) {
-      const cardsArr: CardsModelType[]  = [];
+    if(idCard) {
+      const userCard = user.cards.find(item => item === idCard);
 
-      for (let index = 0; index < userActive.cards.length; index++) {
-        const cardSelected = allCards.find(item => 
-          item.idCard === userActive?.cards[index]
-        )
-
-        cardsArr.push(cardSelected as CardsModelType);
+      if(!userCard) {
+        return message.channel.send(
+          `${message.author}, você não possui essa carta.`
+        ).then(msg => msg.delete({ timeout: 6000 }));
       }
 
-      if(cardsArr.length === 0) {
-        embed
+      const card = allCards.find(item => item.idCard === userCard);
+
+      CardEmbed(message, {
+        color: '#F4F5FA', 
+        title: `#${card?.idCard} - ${capitalizeStr(String(card?.name))}`,
+        description: 
+          `Anime: **${capitalizeStr(String(card?.anime))}**\n` + 
+          `Valor de venda: **${card?.amount}** DTC <:DTC:965680653255446629>`,
+        linkURL: String(card?.linkURL)
+      })
+    } else {
+      const cards: CardsModelType[] = [];
+
+      for (let index = 0; index < user.cards.length; index++) {
+        allCards.find(item => {
+          if(item.idCard === user?.cards[index]) {
+            return cards.push(item);
+          }
+        })
+      }
+
+      if(cards.length === 0) {
+        return message.channel.send(
+          `Ops! ${message.author}, você não possui nenhuma carta no seu inventário.`
+        )
+      }
+
+      let totalAmount = 0;
+
+      for (let index = 0; index < cards.length; index++) {
+        totalAmount += cards[index].amount;
+      }
+
+      const embeds: MessageEmbed[] = []
+
+      for (let index = 0; index < cards.length; index = index + 15) {
+        const embed = new MessageEmbed();
+
+        const newCards = cards.sort().slice(index, index + 15);
+
+        embeds.push(
+          embed
           .setColor('#F4F5FA')
-          .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
+          .setAuthor(
+            `Cartas de ${message.author.username}`, 
+            String(message.author.avatarURL({ 
+              dynamic: true, 
+              format: "png", 
+              size: 1024 
+            })))
           .setThumbnail(String(message.author.avatarURL({ 
             dynamic: true, 
             format: "png", 
             size: 1024 
           })))
-          .setDescription(
-            `Opa ${message.author}, você não possui nenhuma carta no seu inventário. ` + 
-            `Experimente girar algum pacote para conseguir mais cartas. 🙂`
-          )
-
-        return message.channel.send(embed);
-      }
-
-      let totalXP = 0;
-
-      for (let index = 0; index < cardsArr.length; index++) {
-        const cardValue = cardsArr[index].amount
-
-        totalXP += cardValue;
-      }
-
-      const cardsToShow = cardsArr.sort().slice(0, 50);
-
-      embed
-        .setColor('#F4F5FA')
-        .setTitle(`Essas são suas primeiras ${cardsToShow.length} cartas`)
-        .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
-        .setThumbnail(String(message.author.avatarURL({ 
-          dynamic: true, 
-          format: "png", 
-          size: 1024 
-        })))
-        .setDescription(`Seu total de cartas é: **${cardsArr.length}**.\n`+ 
-          cardsToShow.map(item => (
+          .setDescription(newCards.map(item => (
             `\n\n#${item.idCard}⠆ ${capitalizeStr(item.name)}: **${item.amount}** DTC <:DTC:965680653255446629>`
-          )) + `\n\n\nTotal: **${totalXP}** DTC <:DTC:965680653255446629>`
+          )) + 
+          `\n\n\nTotal de DTC: **${totalAmount} DTC** <:DTC:965680653255446629>`
+          )
         )
+      }
 
-      return message.channel.send(embed);
-    } else {
-      const newCardId = userActive.cards.find(item => item === cardId)
-      
-      if(!newCardId) return
-
-      const card = allCards.find(item => item.idCard === newCardId);
-
-      if(!card) return;
-
-      CardEmbed(message, { 
-        color: '#F4F5FA', 
-        title: `#${card.idCard} - ${capitalizeStr(String(card.name))}`,
-        description: 
-          `Anime: **${capitalizeStr(String(card.anime))}**\n` + 
-          `Valor de venda: **${card.amount}** DTC <:DTC:965680653255446629>`,
-        linkURL: String(card.linkURL)
-      })
+      return pagination(
+        message, 
+        { embeds, emojis: ['◀', '▶'], timeout: 60000 * 2 }
+      );
     }
   }
 }

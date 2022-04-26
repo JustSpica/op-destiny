@@ -1,4 +1,4 @@
-import { GeneralEmbed } from "../components/GeneralEmbed";
+import { MessageEmbed } from "discord.js";
 
 import { ICommands } from "../types";
 
@@ -7,16 +7,20 @@ export const command: ICommands = {
   description: 'Mostra a lista de pacotes que podem ser comprados',
   execute(message, args) {
     if(message.channel.type === 'dm') return;
-    
-    return GeneralEmbed(message, {
-      color: '#F4F5FA',
-      title: 'Lista com o drop de pacotes do servidor',
-      description: 
-        'Gaste seus xp points no servidor e tente a sorte para conseguir ainda mais pontos.\n\n' + 
+
+    const embed = new MessageEmbed();
+
+    embed
+      .setColor('#F4F5FA')
+      .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
+      .setTitle('Lista com o drop de pacotes do servidor')
+      .setDescription(
         '📦 **#1 pacote⠆ Contêm um total de 1 drop de cartas**\n' +
         'Preço de compra: **120 DTC**\n\n' + 
         '🕜 **Pacote daily⠆ Pacote de 5 cartas que pode ser aberto todo dia**\n' +
         '**Gratuito**\n\n'
-    })
+      )
+
+    return embed;
   }
 }
