@@ -8,7 +8,7 @@ import { ICommands } from "../types";
 
 export const command: ICommands = {
   name: 'xp',
-  description: 'Comando usado para converter seus DTC em xp. (Pode ser usado na dm)',
+  description: 'Comando usado para converter seus DTC em xp.',
   aliases: ['convert', 'change' ,'changeToXp'],
   usage: '<amount>',
   execute: async (message, args) => {

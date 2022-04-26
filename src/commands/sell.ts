@@ -9,7 +9,7 @@ import { ICommands } from "../types";
 
 export const command: ICommands = {
   name: 'sell',
-  description: 'Comando usado para vender suas cartas. ',
+  description: 'Comando usado para vender suas cartas. (Só na DM)',
   aliases: ['vender'],
   usage: '<cardId(s)>',
   execute: async (message, args) => {

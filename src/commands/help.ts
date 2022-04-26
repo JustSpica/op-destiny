@@ -24,11 +24,11 @@ export const command: ICommands = {
         .setDescription(
           `Opa ${message.author.username}, parece que você está um pouco perdido ` + 
           `com os meus comandos. Então aqui está uma lista completa com todos eles ` + 
-          'para dar aquele help. \n\n Você também pode digitar **op!help <aqui vai o nome do comando>** ' + 
+          'para dar aquele help. \n\n Você também pode digitar **op!help <command>** ' + 
           '~~para acidentalmente comprar um NFT desvalorizado~~ ' + 
           `para você saber mais informações sobre ele. 🧐\n⠀`)
         .addFields(commands.map(item => (
-          { name: `op!${item.name}`, value: `Descrição: ${item.description}\n⠀` }
+          { name: `op!${item.name}`, value: `${item.description}\n⠀` }
         )))
       
       return message.channel.send(embed);

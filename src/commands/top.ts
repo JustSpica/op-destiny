@@ -1,8 +1,6 @@
 import { MessageEmbed } from "discord.js";
-import { CardEmbed } from "../components/CardEmbed";
 
-import { CardsModel, CardsModelType } from "../db/models/CardsModel";
-import { UserModel } from '../db/models/UsersModel';
+import { CardsModel } from "../db/models/CardsModel";
 
 import { capitalizeStr } from "../functions/capitalize";
 
@@ -11,7 +9,7 @@ import { ICommands } from "../types";
 export const command: ICommands = {
   name: 'top',
   description: 
-    "Mostra os 10 cards mais valiosos do servidor",
+    "Mostra as minhas 10 cartas mais valiosas",
   aliases: ['r'],
   execute: async (message, args) => {
     const allCards = await CardsModel.find({});
