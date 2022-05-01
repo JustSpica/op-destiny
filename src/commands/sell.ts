@@ -86,14 +86,18 @@ export const command: ICommands = {
         let totalSell = 0;
 
         for (let index = 0; index < cardsID.length; index++) {
-          user.cards.splice(user.cards.indexOf(cardsID[index]), 1)
+          const cardIndex = user.cards.indexOf(cardsID[index]);
 
-          const card = allCards.find(item => item.idCard === cardsID[index]);
-          if(!card) return
+          if(cardIndex !== -1) {
+            user.cards.splice(cardIndex, 1)
 
-          totalSell += card.amount;
-
-          cards.push(card);
+            const card = allCards.find(item => item.idCard === cardsID[index]);
+            if(!card) return
+  
+            totalSell += card.amount;
+  
+            cards.push(card);
+          }
         }
 
         await UserModel.findOneAndUpdate({

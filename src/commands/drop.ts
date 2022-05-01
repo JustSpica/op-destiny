@@ -11,6 +11,6 @@ export const command: ICommands = {
 
     if(message.channel.id !== '952779254960107580') return;
 
-    DropSystem(message, { amount: 120, cardsNumber: 1 });
+    DropSystem(message, { amount: 200, cardsNumber: 1 });
   }
 }

@@ -40,7 +40,9 @@ export const pagination = async (message: Message, { embeds, emojis, timeout }: 
   })
 
   collector.on('end', () => {
-    currentyPage.reactions.removeAll();
+    if(message.channel.type !== "dm") {
+      currentyPage.reactions.removeAll();
+    }
   })
 
   return currentyPage;
