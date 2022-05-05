@@ -36,12 +36,12 @@ export const BoosterSystem = async (message: Message) => {
       idUser: id,
     }, {
       $set: {
-        boosterTime: Date.now() - 60000 * 60 * 6,
+        boosterTime: Date.now() - 60000 * 60 * 8,
       }
     })
   }
 
-  if(!user.boosterTime || Date.now() - user?.boosterTime! > 60000 * 60 * 6) {
+  if(!user.boosterTime || Date.now() - user?.boosterTime! > 60000 * 60 * 8) {
     const tiers = getBoosterTiers(1);
     const cards = await getCards(tiers);  
     const cardsId = cards.map(item => item.idCard)
@@ -67,7 +67,7 @@ export const BoosterSystem = async (message: Message) => {
   } else {
     message.channel.send(
       `Olá ${message.author}, sinto lhe informar mas o seu divino bonus não se encontra disponivel. 🧐\n` + 
-      `**Restante:** ${timestampToDate(60000 * 60 * 6 - (Date.now() - user?.boosterTime!))}`
+      `**Restante:** ${timestampToDate(60000 * 60 * 8 - (Date.now() - user?.boosterTime!))}`
     ).then(msg => msg.delete({ timeout: 6000 }))
   }
 }

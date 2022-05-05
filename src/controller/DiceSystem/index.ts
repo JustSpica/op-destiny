@@ -25,7 +25,7 @@ export const DiceSystem = async (message: Message) => {
     await UserModel.findOneAndUpdate({
       idUser: id,
     }, {
-      $set: { dice: { timestamp: Date.now() - 60000 * 30 } }
+      $set: { dice: { timestamp: Date.now() - 60000 * 45 } }
     })
 
     return message.channel.send(
@@ -34,7 +34,7 @@ export const DiceSystem = async (message: Message) => {
     )
   }
 
-  if(Date.now() - user.dice!.timestamp > 60000 * 30) {
+  if(Date.now() - user.dice!.timestamp > 60000 * 45) {
     const diceValue = RandomDice({ dice: "d20" });
     const card = await DiceToCard(Number(diceValue));
 
@@ -61,7 +61,7 @@ export const DiceSystem = async (message: Message) => {
     })
   } else {
     return message.channel.send(
-      `Opa ${message.author}, seu d20 estará pronto daqui **${timestampToDate(60000 * 30 - (Date.now() - user?.dice.timestamp!))}**`
+      `Opa ${message.author}, seu d20 estará pronto daqui **${timestampToDate(60000 * 45 - (Date.now() - user?.dice.timestamp!))}**`
     )
   }
 }
