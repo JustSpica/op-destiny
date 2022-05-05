@@ -8,7 +8,6 @@ import { capitalizeStr } from "../../functions/capitalize";
 
 import { getCards } from "../../utils/GetCards";
 import { getTiers } from "../../utils/GetTiers";
-import { getKeys } from "../../utils/KeysUtils";
 
 type DropSystemProps = {
   amount: number;
@@ -42,8 +41,6 @@ export const DropSystem = async (message: Message, { amount, cardsNumber }: Drop
     })
   }
 
-  const keySorted = getKeys();
-
   const tiers = getTiers(cardsNumber)
 
   const cards = await getCards(tiers);
@@ -56,16 +53,6 @@ export const DropSystem = async (message: Message, { amount, cardsNumber }: Drop
       cards: cardsId
     }
   });
-  
-  if(keySorted) {
-    await UserModel.findOneAndUpdate({
-      idUser: message.author.id,
-    }, {
-      $push: { 
-        keys: keySorted
-      }
-    });
-  }
 
   cards.map(item => {
     CardEmbed(message, { 
@@ -78,20 +65,4 @@ export const DropSystem = async (message: Message, { amount, cardsNumber }: Drop
       linkURL: item.linkURL
     }).then(msg => msg.react('<:DTC:965680653255446629>'))
   })
-  
-  if(keySorted?.id === 1) {
-    return message.channel.send(
-      `Wow **${message.author.username}**, você dropou uma... Espera VOCÊ DROPOU ` + 
-      `UMA <:shadeSoul:968745230985723904> **${keySorted.name}** 😮, isso é muito raro. ` + 
-      `Você pode usar ela para abrir um **shade chest**.`
-    )
-  }
-
-  if(keySorted?.id === 2) {
-    return message.channel.send(
-      `Wow **${message.author.username}**, você dropou junto com a sua carta uma ` + 
-      `<:vengefulSpirit:968745284379246592> **${keySorted.name}**, isso é bom. ` + 
-      `Você pode usar ela para abrir um **spirit chest**.` 
-    )
-  }
 }

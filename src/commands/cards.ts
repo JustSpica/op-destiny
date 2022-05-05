@@ -1,20 +1,20 @@
 import { MessageEmbed } from "discord.js";
-import { CardEmbed } from "../components/CardEmbed";
 
 import { CardsModel, CardsModelType } from "../db/models/CardsModel";
 import { UserModel } from "../db/models/UsersModel";
 
 import { capitalizeStr } from "../functions/capitalize";
 import { pagination } from "../functions/pagination";
+import { sortAmount } from "../functions/sortAmount";
 
 import { ICommands } from "../types";
 
 export const command: ICommands = {
   name: 'cards',
   description: 'Lista todas as cartas que você possui.',
-  usage: '<cardIndex>',
+  usage: '<+tc | -tc>',
   execute: async (message, args) => {
-    const idCard = args[0]
+    const filterOptions = args[0]
 
     let user = await UserModel.findOne({
       idUser: message.author.id,
@@ -28,7 +28,68 @@ export const command: ICommands = {
 
     let allCards = await CardsModel.find({});
 
-    if(idCard) {
+    let cards: CardsModelType[] = [];
+
+    for (let index = 0; index < user.cards.length; index++) {
+      allCards.find(item => {
+        if(item.idCard === user?.cards[index]) {
+          return cards.push(item);
+        }
+      })
+    }
+
+    if(cards.sort().length === 0) {
+      return message.channel.send(
+        `❌ Ops! ${message.author}, você não possui nenhuma carta no seu inventário. ❌`
+      )
+    }
+
+    let totalAmount = 0;
+    for (let index = 0; index < cards.length; index++) {
+      totalAmount += cards[index].amount;
+    }
+
+    if(filterOptions === '+tc') {
+      cards = sortAmount(cards, '+tc')
+    }
+    
+    if(filterOptions === '-tc') {
+      cards = sortAmount(cards, '-tc')
+    }
+
+    const embeds: MessageEmbed[] = []
+
+    for (let index = 0; index < cards.length; index = index + 15) {
+      const embed = new MessageEmbed();
+
+      const newCards = cards.slice(index, index + 15);
+
+      embeds.push(
+        embed
+        .setColor('#F4F5FA')
+        .setAuthor(
+          `Cartas de ${message.author.username}`, 
+          String(message.author.avatarURL({ 
+            dynamic: true, 
+            format: "png", 
+            size: 1024 
+          })))
+        .setThumbnail(String(message.author.avatarURL({ 
+          dynamic: true, 
+          format: "png", 
+          size: 1024 
+        })))
+        .setDescription(newCards.map(item => (
+          `\n\n#${item.idCard}⠆ ${capitalizeStr(item.name)}: **${item.amount}** DTC <:DTC:965680653255446629>`
+        )) + 
+        `\n\n\nTotal de DTC: **${totalAmount} DTC** <:DTC:965680653255446629>`
+        )
+      )
+    }
+
+    return pagination(message, { embeds, emojis: ['◀', '▶'], timeout: 60000 * 2 });
+
+    /* if(idCard) {
       const userCard = user.cards.find(item => item === idCard);
 
       if(!userCard) {
@@ -47,63 +108,6 @@ export const command: ICommands = {
           `Valor de venda: **${card?.amount}** DTC <:DTC:965680653255446629>`,
         linkURL: String(card?.linkURL)
       })
-    } else {
-      const cards: CardsModelType[] = [];
-
-      for (let index = 0; index < user.cards.length; index++) {
-        allCards.find(item => {
-          if(item.idCard === user?.cards[index]) {
-            return cards.push(item);
-          }
-        })
-      }
-
-      if(cards.length === 0) {
-        return message.channel.send(
-          `Ops! ${message.author}, você não possui nenhuma carta no seu inventário.`
-        )
-      }
-
-      let totalAmount = 0;
-
-      for (let index = 0; index < cards.length; index++) {
-        totalAmount += cards[index].amount;
-      }
-
-      const embeds: MessageEmbed[] = []
-
-      for (let index = 0; index < cards.length; index = index + 15) {
-        const embed = new MessageEmbed();
-
-        const newCards = cards.sort().slice(index, index + 15);
-
-        embeds.push(
-          embed
-          .setColor('#F4F5FA')
-          .setAuthor(
-            `Cartas de ${message.author.username}`, 
-            String(message.author.avatarURL({ 
-              dynamic: true, 
-              format: "png", 
-              size: 1024 
-            })))
-          .setThumbnail(String(message.author.avatarURL({ 
-            dynamic: true, 
-            format: "png", 
-            size: 1024 
-          })))
-          .setDescription(newCards.map(item => (
-            `\n\n#${item.idCard}⠆ ${capitalizeStr(item.name)}: **${item.amount}** DTC <:DTC:965680653255446629>`
-          )) + 
-          `\n\n\nTotal de DTC: **${totalAmount} DTC** <:DTC:965680653255446629>`
-          )
-        )
-      }
-
-      return pagination(
-        message, 
-        { embeds, emojis: ['◀', '▶'], timeout: 60000 * 2 }
-      );
-    }
+    }*/
   }
 }

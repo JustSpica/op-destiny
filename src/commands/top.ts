@@ -3,13 +3,14 @@ import { MessageEmbed } from "discord.js";
 import { CardsModel } from "../db/models/CardsModel";
 
 import { capitalizeStr } from "../functions/capitalize";
+import { pagination } from "../functions/pagination";
 
 import { ICommands } from "../types";
 
 export const command: ICommands = {
   name: 'top',
   description: 
-    "Mostra as minhas 10 cartas mais valiosas",
+    "Mostra o rank de todas as cartas do servidor",
   aliases: ['class', 'classCard', 'range'],
   execute: async (message, args) => {
     const allCards = await CardsModel.find({});
@@ -20,30 +21,30 @@ export const command: ICommands = {
       if(x.amount < y.amount) return 1;
 
       return 0;
-    })
+    });
 
     const embeds = [];
 
-    for (let index = 0; index < allCards.length; index = index + 10) {
+    for (let index = 0; index <= allCards.length; index = index + 15) {
       const embed = new MessageEmbed();
+
+      const cards = allCards.slice(index, index + 15);
 
       embeds.push(
         embed
           .setColor('#F4F5FA')
-          .setTitle(`Top 10 cartas do servidor`)
+          .setTitle('🏆 Top 100 cards')
           .setAuthor('Op. Destiny', 'https://i.imgur.com/lkMXyJ1.gif')
           .setThumbnail('https://i.imgur.com/lkMXyJ1.gif')
-          .setDescription(allCards.map((item, index) => (
-            `• ${index + 1} - ${capitalizeStr(item.name)}: ${item.amount} DTC <:DTC:965680653255446629>\n`
-          )))
-      )
+          .setDescription(cards.map(item => {     
+            const index = allCards.findIndex(element => element.idCard === item.idCard);
 
+            return `#${index + 1} - ${capitalizeStr(item.name)}: ${item.amount} DTC <:DTC:965680653255446629>\n`
+          }))
+          
+      )
     }
 
-    const embed = new MessageEmbed();
-
-    
-
-      return message.channel.send(embed);
+    return pagination(message, { embeds, emojis: ['◀', '▶'], timeout: 60000 * 2 });
   }
 }

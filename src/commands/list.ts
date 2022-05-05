@@ -16,7 +16,7 @@ export const command: ICommands = {
       .setTitle('Lista com o drop de pacotes do servidor')
       .setDescription(
         '📦 **#1 pacote⠆ Contêm um total de 1 drop de cartas**\n' +
-        'Preço de compra: **200 DTC**\n\n' + 
+        'Preço de compra: **165 DTC**\n\n' + 
         '🕜 **Pacote daily⠆ Pacote de 5 cartas que pode ser aberto todo dia**\n' +
         '**Gratuito**\n\n'
       )

@@ -1,10 +1,5 @@
 import { model, Schema } from 'mongoose';
 
-export interface IKeys {
-  id: number;
-  name: string;
-}
-
 export interface IUserModel {
   idUser: string;
   name: string;
@@ -15,8 +10,10 @@ export interface IUserModel {
     xp: number;
     timestamp: number;
   };
+  dice?: {
+    timestamp: number;
+  }
   boosterTime?: number;
-  keys?: IKeys[];
   timestamp: number;
 }
 
@@ -51,8 +48,8 @@ export const UserModel = model('users', new Schema<IUserModel>({
     required: false,
     unique: false,
   },
-  keys: {
-    type: Array,
+  dice: {
+    type: Object,
     required: false,
     unique: false,
   },
