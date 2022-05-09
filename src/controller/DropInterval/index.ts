@@ -24,6 +24,8 @@ export const DropInterval = async (client: Client) => {
     const tier = getTiers(1);
     const cards = await getCards(tier);
 
+    console.log(`Inverval: ${cards[0].name}`);
+
     cards.map(async item => {
       embed
         .setColor('#F4F5FA')

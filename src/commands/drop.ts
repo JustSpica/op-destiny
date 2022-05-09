@@ -5,7 +5,6 @@ import { ICommands } from "../types";
 export const command: ICommands = {
   name: 'drop',
   description: 'Comando usado para dropar cartas em um canal de texto',
-  usage: '<packageID>',
   execute: async (message, args) => {
     if(message.channel.type === 'dm') return;
 
